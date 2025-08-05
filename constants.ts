@@ -332,21 +332,109 @@ export const TOP_DRUGS_LIST: TopDrug[] = [
 ];
 
 export const PTCB_FLASHCARDS: FlashCard[] = [
+  // Top 200 Drugs
   { category: "Top 200 Drugs", question: "What is the brand name for Sertraline?", answer: "Zoloft" },
   { category: "Top 200 Drugs", question: "What is the therapeutic class for Metformin?", answer: "Biguanide (Antidiabetic)" },
   { category: "Top 200 Drugs", question: "What is the generic name for Lipitor?", answer: "Atorvastatin" },
   { category: "Top 200 Drugs", question: "Lisinopril belongs to which drug class?", answer: "ACE Inhibitor" },
+  { category: "Top 200 Drugs", question: "What is the generic name for Xanax?", answer: "Alprazolam" },
+  { category: "Top 200 Drugs", question: "What is the brand name for Omeprazole?", answer: "Prilosec" },
+  { category: "Top 200 Drugs", question: "What is the generic name for Synthroid?", answer: "Levothyroxine" },
+  { category: "Top 200 Drugs", question: "What is the brand name for Fluoxetine?", answer: "Prozac" },
+  { category: "Top 200 Drugs", question: "What is the generic name for Norvasc?", answer: "Amlodipine" },
+  { category: "Top 200 Drugs", question: "What drug class does Metoprolol belong to?", answer: "Beta Blocker" },
+  { category: "Top 200 Drugs", question: "What is the brand name for Warfarin?", answer: "Coumadin" },
+  { category: "Top 200 Drugs", question: "What is the generic name for Lexapro?", answer: "Escitalopram" },
+  { category: "Top 200 Drugs", question: "What is the brand name for Hydrochlorothiazide?", answer: "HCTZ (also Microzide)" },
+  { category: "Top 200 Drugs", question: "What drug class does Simvastatin belong to?", answer: "Statin (HMG-CoA Reductase Inhibitor)" },
+  { category: "Top 200 Drugs", question: "What is the generic name for Plavix?", answer: "Clopidogrel" },
+  { category: "Top 200 Drugs", question: "What is the brand name for Gabapentin?", answer: "Neurontin" },
+  { category: "Top 200 Drugs", question: "What is the generic name for Advair?", answer: "Fluticasone/Salmeterol" },
+  { category: "Top 200 Drugs", question: "What drug class does Losartan belong to?", answer: "ARB (Angiotensin Receptor Blocker)" },
+  { category: "Top 200 Drugs", question: "What is the brand name for Tramadol?", answer: "Ultram" },
+  { category: "Top 200 Drugs", question: "What is the generic name for Vicodin?", answer: "Hydrocodone/Acetaminophen" },
+
+  // Pharmacy Law
   { category: "Pharmacy Law", question: "Which DEA form is used to order Schedule II controlled substances?", answer: "DEA Form 222" },
   { category: "Pharmacy Law", question: "Which law requires pharmacists to offer counseling to Medicaid patients?", answer: "OBRA '90 (Omnibus Budget Reconciliation Act of 1990)" },
   { category: "Pharmacy Law", question: "What does the abbreviation HIPAA stand for?", answer: "Health Insurance Portability and Accountability Act" },
+  { category: "Pharmacy Law", question: "Which DEA form is used to report the theft or significant loss of controlled substances?", answer: "DEA Form 106" },
+  { category: "Pharmacy Law", question: "How many years can a DEA registration be valid for?", answer: "3 years" },
+  { category: "Pharmacy Law", question: "What is the maximum number of refills allowed for Schedule III-IV controlled substances?", answer: "5 refills" },
+  { category: "Pharmacy Law", question: "How long is a Schedule II prescription valid?", answer: "90 days from the date written" },
+  { category: "Pharmacy Law", question: "What does DAW stand for?", answer: "Dispense As Written" },
+  { category: "Pharmacy Law", question: "Which schedule has the highest abuse potential?", answer: "Schedule I" },
+  { category: "Pharmacy Law", question: "How often must controlled substance inventories be taken?", answer: "Every 2 years (biannually)" },
+  { category: "Pharmacy Law", question: "What is the Poison Prevention Packaging Act?", answer: "Requires child-resistant packaging for most medications" },
+  { category: "Pharmacy Law", question: "How long must prescription records be kept?", answer: "At least 2 years" },
+  { category: "Pharmacy Law", question: "What is the Orange Book used for?", answer: "FDA publication listing approved drug products with therapeutic equivalence evaluations" },
+  { category: "Pharmacy Law", question: "What does NDC stand for?", answer: "National Drug Code" },
+
+  // Calculations
   { category: "Calculations", question: "A prescription calls for 30mg of a drug, but it is only available as a 120mg/4mL solution. How many mL are needed?", answer: "1 mL" },
   { category: "Calculations", question: "How many grams of dextrose are in 500mL of D5W (Dextrose 5% in Water)?", answer: "25 grams" },
+  { category: "Calculations", question: "Convert 150 pounds to kilograms. (1 kg = 2.2 lbs)", answer: "Approximately 68.2 kg" },
+  { category: "Calculations", question: "A patient takes 2 tablets twice daily of a medication. How many tablets are needed for a 30-day supply?", answer: "120 tablets" },
+  { category: "Calculations", question: "If an insurance copay is $15 and the patient pays $35 total, what is the insurance portion?", answer: "$20" },
+  { category: "Calculations", question: "How many milliliters are in 2 teaspoons?", answer: "10 mL (1 tsp = 5 mL)" },
+  { category: "Calculations", question: "A 70kg patient needs 5mg/kg/day of a medication. What is the total daily dose?", answer: "350 mg" },
+  { category: "Calculations", question: "If a bottle contains 100 tablets and the patient takes 1.5 tablets daily, how many days will it last?", answer: "Approximately 67 days" },
+  { category: "Calculations", question: "Convert 2.5 grams to milligrams.", answer: "2,500 mg" },
+  { category: "Calculations", question: "A prescription is for 240mL with directions to take 5mL three times daily. How many days will this last?", answer: "16 days" },
+
+  // Terminology
   { category: "Terminology", question: "What does the sig code 'qhs' mean?", answer: "At bedtime" },
   { category: "Terminology", question: "What does 'po' stand for?", answer: "By mouth" },
-  { category: "Safety", question: "Name a pair of common look-alike/sound-alike drugs.", answer: "Celebrex (celecoxib) and Celexa (citalopram) / hydralazine and hydroxyzine" },
+  { category: "Terminology", question: "What does 'prn' mean?", answer: "As needed" },
+  { category: "Terminology", question: "What does 'bid' mean?", answer: "Twice a day" },
+  { category: "Terminology", question: "What does 'tid' mean?", answer: "Three times a day" },
+  { category: "Terminology", question: "What does 'qid' mean?", answer: "Four times a day" },
+  { category: "Terminology", question: "What does 'ac' mean?", answer: "Before meals" },
+  { category: "Terminology", question: "What does 'pc' mean?", answer: "After meals" },
+  { category: "Terminology", question: "What does 'NPO' mean?", answer: "Nothing by mouth" },
+  { category: "Terminology", question: "What does 'stat' mean?", answer: "Immediately" },
+  { category: "Terminology", question: "What does 'SubQ' mean?", answer: "Subcutaneous" },
+  { category: "Terminology", question: "What does 'IM' mean?", answer: "Intramuscular" },
+  { category: "Terminology", question: "What does 'IV' mean?", answer: "Intravenous" },
+  { category: "Terminology", question: "What does 'gtt' mean?", answer: "Drop" },
+
+  // Safety
+  { category: "Safety", question: "Name a pair of common look-alike/sound-alike drugs.", answer: "Celebrex (celecoxib) and Celexa (citalopram)" },
+  { category: "Safety", question: "What are the high-alert medication categories?", answer: "Insulin, anticoagulants, chemotherapy, opioids" },
+  { category: "Safety", question: "What color is used for chemotherapy warning labels?", answer: "Purple" },
+  { category: "Safety", question: "What does a black box warning indicate?", answer: "Serious or life-threatening risks" },
+  { category: "Safety", question: "What is the proper storage temperature for most refrigerated medications?", answer: "36-46°F (2-8°C)" },
+  { category: "Safety", question: "Name another pair of look-alike/sound-alike drugs.", answer: "Hydralazine and Hydroxyzine" },
+  { category: "Safety", question: "What does MedWatch report?", answer: "Adverse drug events and medical device problems to the FDA" },
+  { category: "Safety", question: "What is the purpose of tall man lettering?", answer: "To distinguish look-alike drug names (e.g., DOPamine vs DOBUTamine)" },
+
+  // Hospital Pharmacy
   { category: "Hospital Pharmacy", question: "What is a TPN?", answer: "Total Parenteral Nutrition, an IV solution providing nutrients to patients who cannot eat." },
-  { category: "Community Pharmacy", question: "How long is a prescription for a non-controlled substance valid?", answer: "Typically one year from the date it was written." },
-  { category: "Calculations", question: "Convert 150 pounds to kilograms. (1 kg = 2.2 lbs)", answer: "Approximately 68.2 kg" },
-  { category: "Top 200 Drugs", question: "What is the generic name for Xanax?", answer: "Alprazolam" },
-  { category: "Pharmacy Law", question: "Which DEA form is used to report the theft or significant loss of controlled substances?", answer: "DEA Form 106" },
+  { category: "Hospital Pharmacy", question: "What does 'unit dose' mean?", answer: "Individual doses packaged for single administration" },
+  { category: "Hospital Pharmacy", question: "What is an IV piggyback (IVPB)?", answer: "A small volume IV medication infused through an existing IV line" },
+  { category: "Hospital Pharmacy", question: "What is the difference between stock and non-stock medications?", answer: "Stock medications are kept in inventory; non-stock are ordered as needed" },
+  { category: "Hospital Pharmacy", question: "What is a code cart?", answer: "Emergency medication cart for cardiac arrest situations" },
+  { category: "Hospital Pharmacy", question: "What does 'IV push' mean?", answer: "Medication injected directly into an IV line over a short period" },
+
+  // Insurance & Billing
+  { category: "Insurance", question: "What does AWP stand for?", answer: "Average Wholesale Price" },
+  { category: "Insurance", question: "What is a prior authorization?", answer: "Insurance approval required before dispensing certain medications" },
+  { category: "Insurance", question: "What does MAC pricing mean?", answer: "Maximum Allowable Cost - the maximum amount insurance will pay for a generic drug" },
+  { category: "Insurance", question: "What is a deductible?", answer: "The amount a patient must pay before insurance coverage begins" },
+  { category: "Insurance", question: "What does 'days supply' refer to?", answer: "The number of days a dispensed quantity of medication will last" },
+  { category: "Insurance", question: "What is a formulary?", answer: "A list of medications covered by an insurance plan" },
+
+  // Compounding
+  { category: "Compounding", question: "What is an ointment?", answer: "A semisolid preparation in an oleaginous (greasy) base" },
+  { category: "Compounding", question: "What is a cream?", answer: "A semisolid preparation in a water-removable base" },
+  { category: "Compounding", question: "What does 'q.s.' mean in compounding?", answer: "Quantity sufficient (add enough to make)" },
+  { category: "Compounding", question: "What is a capsule machine used for?", answer: "Filling empty capsule shells with powder medications" },
+  { category: "Compounding", question: "What is trituration?", answer: "The process of reducing particle size by grinding in a mortar and pestle" },
+
+  // Inventory Management
+  { category: "Inventory", question: "What does 'FIFO' stand for?", answer: "First In, First Out - inventory rotation method" },
+  { category: "Inventory", question: "What is an NDC number?", answer: "National Drug Code - unique identifier for drug products" },
+  { category: "Inventory", question: "What does 'back order' mean?", answer: "Medication temporarily unavailable from the manufacturer" },
+  { category: "Inventory", question: "What is a recall?", answer: "Removal of a product from the market due to safety concerns" },
+  { category: "Inventory", question: "What are the three types of drug recalls?", answer: "Class I (dangerous), Class II (temporary health problems), Class III (unlikely to cause harm)" }
 ];

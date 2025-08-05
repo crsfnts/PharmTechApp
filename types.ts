@@ -5,6 +5,7 @@ export enum View {
   Counter = 'COUNTER',
   SigGlossary = 'SIG_GLOSSARY',
   FlashCards = 'FLASH_CARDS',
+  InjectionGuide = 'INJECTION_GUIDE',
 }
 
 export enum CalculatorType {

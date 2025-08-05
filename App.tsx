@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { View } from './types.ts';
 import Dashboard from './components/Dashboard.tsx';
@@ -7,7 +6,8 @@ import Glossary from './components/DrugLookup.tsx';
 import Counter from './components/IVDripRateCalculator.tsx';
 import SigGlossary from './components/Abbreviations.tsx';
 import Header from './components/Header.tsx';
-import FlashCards from './components/FlashCards.tsx';
+import PTCBLearning from './components/FlashCards.tsx';
+import InjectionGuide from './components/InjectionGuide.tsx';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>(View.Dashboard);
@@ -27,7 +27,9 @@ const App: React.FC = () => {
       case View.Counter:
         return <Counter setView={setView} />;
       case View.FlashCards:
-        return <FlashCards setView={setView} />;
+        return <PTCBLearning setView={setView} />;
+      case View.InjectionGuide:
+        return <InjectionGuide setView={setView} />;
       case View.Dashboard:
       default:
         return <Dashboard setView={setView} />;
@@ -41,7 +43,7 @@ const App: React.FC = () => {
         {renderView()}
       </main>
       <footer className="text-center text-xs text-slate-400 p-4">
-        <p>Pharm-Assist Tech &copy; 2024. All information should be verified by a licensed pharmacist.</p>
+        <p>Pharm-Assist Tech Version 2 &copy; 2024. All information should be verified by a licensed pharmacist.</p>
         <p className="mt-1 font-medium">Created by Christopher Fuentes</p>
       </footer>
     </div>
