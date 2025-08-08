@@ -1,5 +1,5 @@
 
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { DrugInfo } from '../types.ts';
 
 // The API key has been added here as requested to allow the application to run.
@@ -14,53 +14,69 @@ if (!API_KEY) {
     throw new Error("Google AI API Key is missing. Please add it to components/geminiService.ts");
 }
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+const ai = new GoogleGenerativeAI(API_KEY);
+const MODEL_CANDIDATES = [
+  "gemini-2.0-flash",
+  "gemini-1.5-flash",
+  "gemini-1.5-flash-8b",
+];
 
 export async function fetchDrugInfo(drugName: string): Promise<DrugInfo> {
-    const prompt = `
-        Provide a concise summary for the drug "${drugName}" for a pharmacy technician.
-        Return the information as a single, valid JSON object. Do not include any text, markdown formatting, or code fences before or after the JSON object.
-        The JSON object must have the following structure and data types:
-        {
-          "genericName": "string",
-          "brandNames": ["string"],
-          "commonUses": ["string"],
-          "dosageForms": ["string"],
-          "commonSideEffects": ["string"],
-          "pharmacology": "string (a brief, easy-to-understand explanation of the mechanism of action)"
-        }
-    `;
+  const prompt = `You are a pharmacy technician assistant.
+Return ONLY a single valid JSON object (no markdown fences or extra text) describing the drug "${drugName}" with this exact shape:
+{
+  "genericName": "string",
+  "brandNames": ["string"],
+  "commonUses": ["string"],
+  "dosageForms": ["string"],
+  "commonSideEffects": ["string"],
+  "pharmacology": "string"
+}`;
 
+  let lastErr: unknown = null;
+  for (const modelName of MODEL_CANDIDATES) {
     try {
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash-preview-04-17",
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-                temperature: 0.2,
-            },
-        });
+      const model = ai.getGenerativeModel({ model: modelName });
+      const result = await model.generateContent({
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: prompt }],
+          },
+        ],
+        generationConfig: {
+          temperature: 0.2,
+          responseMimeType: "application/json",
+        },
+      });
 
-        let jsonStr = response.text.trim();
-        const fenceRegex = /^```(\w*)?\s*\n?(.*?)\n?\s*```$/s;
-        const match = jsonStr.match(fenceRegex);
-        if (match && match[2]) {
-            jsonStr = match[2].trim();
-        }
+      let jsonStr = result.response.text().trim();
+      // Strip potential fences just in case
+      const fenceRegex = /^```(?:json)?\s*\n?([\s\S]*?)\n?```$/;
+      const m = jsonStr.match(fenceRegex);
+      if (m && m[1]) jsonStr = m[1].trim();
 
-        const parsedData = JSON.parse(jsonStr);
-        
-        // Basic validation
-        if (typeof parsedData.genericName !== 'string' || !Array.isArray(parsedData.brandNames)) {
-            throw new Error("Received malformed JSON data from AI.");
-        }
-
-        return parsedData as DrugInfo;
-
-    } catch (error) {
-        console.error("Error fetching drug information from Gemini:", error);
-        throw new Error("Failed to retrieve drug information. The AI model may be unavailable or the drug name may not be recognized.");
+      const parsed = JSON.parse(jsonStr);
+      if (
+        !parsed ||
+        typeof parsed.genericName !== "string" ||
+        !Array.isArray(parsed.brandNames) ||
+        !Array.isArray(parsed.commonUses) ||
+        !Array.isArray(parsed.dosageForms) ||
+        !Array.isArray(parsed.commonSideEffects) ||
+        typeof parsed.pharmacology !== "string"
+      ) {
+        throw new Error("Malformed AI JSON");
+      }
+      return parsed as DrugInfo;
+    } catch (err) {
+      console.warn(`Model ${modelName} failed for fetchDrugInfo:`, err);
+      lastErr = err;
+      // try next model
     }
+  }
+  console.error("All model candidates failed for fetchDrugInfo", lastErr);
+  throw new Error("AI temporarily unavailable. Local results are shown below when available.");
 }
 
 interface PillCharacteristics {
@@ -91,30 +107,42 @@ export async function identifyPill(characteristics: PillCharacteristics): Promis
         Return the entire response as a single block of well-formatted text. Use markdown for lists and bolding to improve readability. Do not use JSON.
     `;
 
-    try {
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash-preview-04-17",
-            contents: prompt,
-            config: {
-                temperature: 0.3,
-            },
+    let lastErr: unknown = null;
+    for (const modelName of MODEL_CANDIDATES) {
+      try {
+        const model = ai.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent({
+          contents: [
+            { role: 'user', parts: [{ text: prompt }]}
+          ]
         });
-        
-        let text = response.text;
+        let text = result.response.text();
         // Basic Markdown to HTML
-        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                   .replace(/^- (.*$)/gm, '<li>$1</li>')
-                   .replace(/(\n)?(<ul>|<ol>)?((<li>.*<\/li>)+)(<\/ul>|<\/ol>)?(\n)?/gs, (match, p1, p2, p3, p4, p5, p6) => {
-                       return `<ul>${p3}</ul>`;
-                   })
-                   .replace(/\n/g, '<br />')
-                   .replace(/<br \s*\/?><ul>/g, '<ul>')
-                   .replace(/<\/ul><br \s*\/?>/g, '</ul>');
-
+         text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/^- (.*$)/gm, '<li>$1</li>')
+                    .replace(
+                      /(\n)?(<ul>|<ol>)?((<li>.*<\/li>)+)(<\/ul>|<\/ol>)?(\n)?/gs,
+                      (
+                        _m: string,
+                        _p1: string,
+                        _p2: string,
+                        p3: string,
+                        _p4: string,
+                        _p5: string,
+                        _p6: string
+                      ) => {
+                        return `<ul>${p3}</ul>`;
+                      }
+                    )
+                    .replace(/\n/g, '<br />')
+                    .replace(/<br \s*\/?><ul>/g, '<ul>')
+                    .replace(/<\/ul><br \s*\/?>/g, '</ul>');
         return text;
-
-    } catch (error) {
-        console.error("Error identifying pill from Gemini:", error);
-        throw new Error("Failed to identify pill. The AI model may be unavailable or the provided information may be invalid.");
+      } catch (err) {
+        console.warn(`Model ${modelName} failed for identifyPill:`, err);
+        lastErr = err;
+      }
     }
+    console.error("All model candidates failed for identifyPill", lastErr);
+    throw new Error("AI temporarily unavailable. Please try again shortly.");
 }

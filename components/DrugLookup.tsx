@@ -1,8 +1,9 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { View } from '../types.ts';
-import type { DrugInfo, TopDrug } from '../types.ts';
+import type { DrugInfo } from '../types.ts';
 import { fetchDrugInfo } from './geminiService.ts';
+import { findDrugLocally } from './drugData.ts';
 import BackButton from './BackButton.tsx';
 import Spinner from './Spinner.tsx';
 import { TOP_DRUGS_LIST } from '../constants.ts';
@@ -36,10 +37,31 @@ const Glossary: React.FC<GlossaryProps> = ({ setView }) => {
     setDrugInfo(null);
 
     try {
+      // Build brand name hints from our curated top list for better local matching
+      const q = searchQuery.trim().toLowerCase();
+      const brandsForQuery: string[] = [];
+      TOP_DRUGS_LIST.forEach((d) => {
+        if (d.generic.toLowerCase() === q || d.brand.toLowerCase() === q) {
+          brandsForQuery.push(d.brand);
+        }
+      });
+
+      // 1) Try local fallback (deterministic)
+      const local = findDrugLocally(searchQuery, brandsForQuery);
+      if (local) {
+        setDrugInfo(local);
+        return;
+      }
+
+      // 2) Fallback to AI
       const info = await fetchDrugInfo(searchQuery);
       setDrugInfo(info);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred.');
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Unable to find this drug right now. Please try another or pick from the list.'
+      );
     } finally {
       setIsLoading(false);
     }

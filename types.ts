@@ -2,7 +2,7 @@ export enum View {
   Dashboard = 'DASHBOARD',
   DaysSupplyCalc = 'DAYS_SUPPLY_CALC',
   Glossary = 'GLOSSARY',
-  Counter = 'COUNTER',
+  PillIdentifier = 'PILL_IDENTIFIER',
   SigGlossary = 'SIG_GLOSSARY',
   FlashCards = 'FLASH_CARDS',
   InjectionGuide = 'INJECTION_GUIDE',
