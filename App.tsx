@@ -1,17 +1,14 @@
 import React, { useState, useCallback } from 'react';
-import { View } from './types.ts';
-import Dashboard from './components/Dashboard.tsx';
-import DaysSupplyCalculator from './components/DosageCalculator.tsx';
-import Glossary from './components/DrugLookup.tsx';
-import PillIdentifier from './components/PillIdentifier.tsx';
-import SigGlossary from './components/Abbreviations';
+import { View } from './types';
+import DaysSupplyCalculator from './components/DosageCalculator';
+import Glossary from './components/DrugLookup';
+import PillIdentifier from './components/PillIdentifier';
 import SIGTrainer from './components/SIGTrainer';
-import Header from './components/Header.tsx';
-import PTCBLearning from './components/FlashCards.tsx';
-import InjectionGuide from './components/InjectionGuide.tsx';
-import IVFlowRateCalculator from './components/IVFlowRateCalculator.tsx';
-import Sidebar from './components/Sidebar.tsx';
-import MobileNav from './components/MobileNav.tsx';
+import PTCBLearning from './components/FlashCards';
+import InjectionGuide from './components/InjectionGuide';
+import IVFlowRateCalculator from './components/IVFlowRateCalculator';
+import AlligationCalculator from './components/AlligationCalculator';
+import HospitalCalculations from './components/HospitalCalculations';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>(View.Dashboard);
@@ -34,33 +31,28 @@ const App: React.FC = () => {
         return <PTCBLearning setView={setView} />;
       case View.InjectionGuide:
         return <InjectionGuide setView={setView} />;
+      case View.HospitalCalculations:
+        return <HospitalCalculations setView={setView} />;
       case View.IVFlowRate:
         return <IVFlowRateCalculator setView={setView} />;
-      case View.Dashboard:
+      case View.Alligation:
+        return <AlligationCalculator setView={setView} />;
       default:
-        return <Dashboard setView={setView} />;
+        // Default to Days Supply Calculator as the home view
+        return <DaysSupplyCalculator setView={setView} />;
     }
   };
 
   return (
     <div className="min-h-screen bg-slate-100">
-      <Header />
-
-      {/* Mobile navigation (below sticky header) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <MobileNav currentView={currentView} setView={setView} />
-      </div>
-
-      {/* Main layout with sidebar + content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="md:flex md:gap-6">
-          <Sidebar currentView={currentView} setView={setView} />
-          <main className="flex-1 py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex flex-col">
+          {/* Main content */}
+          <main className="flex-1">
             {renderView()}
           </main>
         </div>
       </div>
-
       <footer className="text-center text-xs text-slate-500 p-6 border-t border-slate-200 mt-8">
         <p>Pharm-Assist Tech Version 2 &copy; 2024. All information should be verified by a licensed pharmacist.</p>
         <p className="mt-1 font-medium">Created by Christopher Fuentes</p>
