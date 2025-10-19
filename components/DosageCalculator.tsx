@@ -1,7 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
 import { View, CalculatorType } from '../types.ts';
-import BackButton from './BackButton.tsx';
 import { COMMON_INHALERS, COMMON_INJECTABLES } from '../constants.ts';
 
 interface DaysSupplyCalculatorProps {
@@ -252,7 +251,6 @@ const DaysSupplyCalculator: React.FC<DaysSupplyCalculatorProps> = ({ setView }) 
 
   return (
     <div className="max-w-2xl mx-auto">
-      <BackButton setView={setView} />
       <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold text-slate-800 mb-1">Days Supply Calculator</h2>
         <p className="text-slate-500 mb-6">Calculate the duration for different types of prescriptions.</p>

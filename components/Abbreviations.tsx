@@ -1,7 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
 import { View } from '../types.ts';
-import BackButton from './BackButton.tsx';
 import { COMMON_ABBREVIATIONS } from '../constants.ts';
 
 interface SigGlossaryProps {
@@ -25,7 +24,6 @@ const SigGlossary: React.FC<SigGlossaryProps> = ({ setView }) => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <BackButton setView={setView} />
       <div className="bg-white p-8 rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold text-slate-800 mb-1">Sig Glossary</h2>
         <p className="text-slate-500 mb-6">A quick reference for common prescription sigs.</p>

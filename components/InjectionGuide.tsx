@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { View } from '../types';
-import BackButton from './BackButton';
 
 interface InjectionGuideProps {
   setView: (view: View) => void;
@@ -123,7 +122,6 @@ const InjectionGuide: React.FC<InjectionGuideProps> = ({ setView }) => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <BackButton setView={setView} />
       
       <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
         <div className="mb-6">

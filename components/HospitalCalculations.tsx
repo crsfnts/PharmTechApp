@@ -1,6 +1,5 @@
 import React from 'react';
 import { View } from '../types';
-import BackButton from './BackButton';
 
 interface HospitalCalculationsProps {
   setView: (view: View) => void;
@@ -32,7 +31,6 @@ const HospitalCalculations: React.FC<HospitalCalculationsProps> = ({ setView }) 
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <BackButton setView={setView} />
       
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-slate-800 mb-2">Hospital Calculations</h1>

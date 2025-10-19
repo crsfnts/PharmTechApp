@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View } from '../types';
-import BackButton from './BackButton';
 
 interface AlligationCalculatorProps {
   setView: (view: View) => void;
@@ -57,8 +56,6 @@ const AlligationCalculator: React.FC<AlligationCalculatorProps> = ({ setView }) 
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <BackButton setView={setView} />
-      
       <div className="bg-white rounded-xl shadow-md p-6">
         <h1 className="text-2xl font-bold text-slate-800 mb-2">Alligation Calculator</h1>
         <p className="text-slate-600 mb-6">Use the tic-tac-toe method to calculate the amounts needed for a desired concentration.</p>

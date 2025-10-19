@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, FlashCard } from '../types.ts';
-import BackButton from './BackButton.tsx';
 import { PTCB_FLASHCARDS } from '../constants.ts';
 
 interface PTCBLearningProps {
@@ -738,7 +737,6 @@ const PTCBLearning: React.FC<PTCBLearningProps> = ({ setView }) => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <BackButton setView={setView} />
       
       <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
         <div className="mb-6">

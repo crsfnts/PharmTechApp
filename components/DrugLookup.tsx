@@ -4,7 +4,6 @@ import { View } from '../types.ts';
 import type { DrugInfo } from '../types.ts';
 import { fetchDrugInfo } from './geminiService.ts';
 import { findDrugLocally } from './drugData.ts';
-import BackButton from './BackButton.tsx';
 import Spinner from './Spinner.tsx';
 import { TOP_DRUGS_LIST } from '../constants.ts';
 
@@ -113,7 +112,6 @@ const Glossary: React.FC<GlossaryProps> = ({ setView }) => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <BackButton setView={setView} />
       <div className="bg-white p-8 rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold text-slate-800 mb-1">Glossary</h2>
         <p className="text-slate-500 mb-6">Enter a drug name, or select from the list below.</p>

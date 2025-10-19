@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View } from '../types.ts';
-import BackButton from './BackButton.tsx';
 import Spinner from './Spinner.tsx';
 import { identifyPill } from './geminiService.ts';
 
@@ -57,7 +56,6 @@ const PillIdentifier: React.FC<PillIdentifierProps> = ({ setView }) => {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <BackButton setView={setView} />
       <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold text-slate-800 mb-1">Pill Identifier</h2>
         <p className="text-slate-500 mb-6">Enter the physical characteristics of a pill to identify it.</p>
