@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, viewColors } from '../types';
+import { View } from '../types';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 
 interface HeaderProps {
   currentView: View;
@@ -21,11 +22,10 @@ const viewTitles: Record<View, string> = {
   [View.HospitalCalculations]: 'Hospital Calculations'
 };
 
-const Header: React.FC<HeaderProps> = ({ currentView, onBack, showBack }) => {
+const Header: React.FC<HeaderProps> = ({ currentView, onBack, showBackButton }) => {
   const navigate = useNavigate();
-  const bgColor = viewColors[currentView] || 'bg-white';
+  const { primaryColor, textColor, borderColor } = useTheme();
   const isDashboard = currentView === View.Dashboard;
-  const textColor = isDashboard ? 'text-slate-800' : 'text-white';
   
   const handleBack = () => {
     if (currentView !== View.Dashboard) {
@@ -36,7 +36,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, onBack, showBack }) => {
   };
 
   return (
-    <header className={`${bgColor} sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-200 transition-colors duration-300`}>
+    <header className={`${primaryColor} sticky top-0 z-50 backdrop-blur transition-colors duration-300 ${isDashboard ? 'bg-white/80' : ''} border-b ${borderColor}`}>
       <div className="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8 flex items-center">
         {(showBack && !isDashboard) && (
           <button
@@ -50,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, onBack, showBack }) => {
           </button>
         )}
         <div className="flex items-center gap-3">
-          <span className="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-teal-50 text-teal-600 ring-1 ring-teal-500/10">
+          <span className={`inline-flex items-center justify-center h-9 w-9 rounded-lg ${isDashboard ? 'bg-teal-50 text-teal-600' : 'bg-white/20 text-white'} ring-1 ${isDashboard ? 'ring-teal-500/10' : 'ring-white/20'}`}>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
               <path d="M9 13a1 1 0 011-1h0a1 1 0 110 2H9a1 1 0 01-1-1z" />

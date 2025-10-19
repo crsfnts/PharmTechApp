@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from '../types';
+import { useTheme } from '../context/ThemeContext';
 
 interface DashboardProps {
   setView: (view: View) => void;
@@ -14,7 +15,7 @@ const FeatureCard: React.FC<{
 }> = ({ title, description, icon, color, onClick }) => (
   <button
     onClick={onClick}
-    className={`w-full aspect-square flex flex-col items-center justify-center p-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 ${color} text-white hover:opacity-90`}
+    className={`w-full aspect-square flex flex-col items-center justify-center p-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 ${color} text-white hover:opacity-90 hover:scale-[1.02]`}
   >
     <div className="bg-white/20 p-3 rounded-full mb-3">
       {icon}
@@ -105,14 +106,13 @@ const Dashboard: React.FC<DashboardProps> = ({ setView }) => {
     },
   ];
 
-  return (
-    <div className="w-full p-4">
-      <div className="text-center mb-6">
-        <h1 className="text-2xl font-bold text-slate-800 mb-1">Pharm-Assist Tech</h1>
-        <p className="text-slate-600 text-sm">Essential tools for pharmacy technicians</p>
-      </div>
+  const { primaryColor, textColor } = useTheme();
 
-      <div className="grid grid-cols-2 gap-3">
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 className="text-3xl font-bold text-slate-900 mb-8">Pharm-Assist Tech</h1>
+      <p className="text-slate-600 text-sm">Essential tools for pharmacy technicians</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {features.map((feature) => (
           <FeatureCard
             key={feature.title}

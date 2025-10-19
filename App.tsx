@@ -11,7 +11,7 @@ import InjectionGuide from './components/InjectionGuide';
 import IVFlowRateCalculator from './components/IVFlowRateCalculator';
 import AlligationCalculator from './components/AlligationCalculator';
 import HospitalCalculations from './components/HospitalCalculations';
-import Sidebar from './components/Sidebar';
+import { ThemeProvider } from './context/ThemeContext';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>(View.Dashboard);
@@ -61,22 +61,24 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100">
-      <Header 
-        currentView={currentView}
-        onBack={goBack} 
-        showBack={currentView !== View.Dashboard} 
-      />
-      
-      {/* Main content */}
-      <main className="w-full">
-        {renderView()}
-      </main>
-      <footer className="text-center text-xs text-slate-500 p-6 border-t border-slate-200 mt-8">
-        <p>Pharm-Assist Tech Version 2 &copy; 2024. All information should be verified by a licensed pharmacist.</p>
-        <p className="mt-1 font-medium">Created by Christopher Fuentes</p>
-      </footer>
-    </div>
+    <ThemeProvider view={currentView}>
+      <div className="min-h-screen bg-slate-100">
+        <Header 
+          currentView={currentView}
+          onBack={goBack} 
+          showBack={currentView !== View.Dashboard} 
+        />
+        
+        {/* Main content */}
+        <main className="w-full">
+          {renderView()}
+        </main>
+        <footer className="text-center text-xs text-slate-500 p-6 border-t border-slate-200 mt-8">
+          <p>Pharm-Assist Tech Version 2 &copy; 2024. All information should be verified by a licensed pharmacist.</p>
+          <p className="mt-1 font-medium">Created by Christopher Fuentes</p>
+        </footer>
+      </div>
+    </ThemeProvider>
   );
 };
 
