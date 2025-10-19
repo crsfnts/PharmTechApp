@@ -1,10 +1,26 @@
 
 import React from 'react';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onBack?: () => void;
+  showBack?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ onBack, showBack = false }) => {
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-200">
       <div className="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8 flex items-center">
+        {showBack && (
+          <button 
+            onClick={onBack}
+            className="mr-4 p-1 rounded-full hover:bg-slate-100 transition-colors"
+            aria-label="Go back"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </button>
+        )}
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-teal-50 text-teal-600 ring-1 ring-teal-500/10">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

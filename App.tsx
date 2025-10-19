@@ -15,10 +15,22 @@ import Sidebar from './components/Sidebar';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>(View.Dashboard);
+  const [viewHistory, setViewHistory] = useState<View[]>([]);
 
   const setView = useCallback((view: View) => {
+    setViewHistory(prev => [...prev, currentView]);
     setCurrentView(view);
-  }, []);
+  }, [currentView]);
+
+  const goBack = useCallback(() => {
+    if (viewHistory.length > 0) {
+      const previousView = viewHistory[viewHistory.length - 1];
+      setViewHistory(prev => prev.slice(0, -1));
+      setCurrentView(previousView);
+    } else {
+      setCurrentView(View.Dashboard);
+    }
+  }, [viewHistory]);
 
   const renderView = () => {
     switch (currentView) {
@@ -48,7 +60,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-100">
-      <Header />
+      <Header onBack={goBack} showBack={currentView !== View.Dashboard} />
 
       {/* Main layout with sidebar + content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
