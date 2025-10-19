@@ -34,6 +34,8 @@ const App: React.FC = () => {
 
   const renderView = () => {
     switch (currentView) {
+      case View.Dashboard:
+        return <Dashboard setView={setView} />;
       case View.Glossary:
         return <Glossary setView={setView} />;
       case View.DaysSupplyCalc:
@@ -53,29 +55,19 @@ const App: React.FC = () => {
       case View.Alligation:
         return <AlligationCalculator setView={setView} />;
       default:
-        // Default to Days Supply Calculator as the home view
-        return <DaysSupplyCalculator setView={setView} />;
+        // Default to Dashboard as the home view
+        return <Dashboard setView={setView} />;
     }
   };
 
   return (
     <div className="min-h-screen bg-slate-100">
       <Header onBack={goBack} showBack={currentView !== View.Dashboard} />
-
-      {/* Main layout with sidebar + content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Sidebar - always visible on desktop, hidden on mobile */}
-          <div className="w-full md:w-64 flex-shrink-0">
-            <Sidebar currentView={currentView} setView={setView} />
-          </div>
-
-          {/* Main content */}
-          <main className="flex-1">
-            {renderView()}
-          </main>
-        </div>
-      </div>
+      
+      {/* Main content */}
+      <main className="w-full">
+        {renderView()}
+      </main>
       <footer className="text-center text-xs text-slate-500 p-6 border-t border-slate-200 mt-8">
         <p>Pharm-Assist Tech Version 2 &copy; 2024. All information should be verified by a licensed pharmacist.</p>
         <p className="mt-1 font-medium">Created by Christopher Fuentes</p>
