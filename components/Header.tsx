@@ -1,22 +1,50 @@
-
 import React from 'react';
+import { View, viewColors } from '../types';
+import { useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
+  currentView: View;
   onBack?: () => void;
   showBack?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ onBack, showBack = false }) => {
+const viewTitles: Record<View, string> = {
+  [View.Dashboard]: 'Pharm-Assist Tech',
+  [View.Glossary]: 'Glossary',
+  [View.SigGlossary]: 'Sig Trainer',
+  [View.DaysSupplyCalc]: 'Days Supply Calculator',
+  [View.PillIdentifier]: 'Pill Identifier',
+  [View.FlashCards]: 'PTCB Prep',
+  [View.InjectionGuide]: 'Injection Guide',
+  [View.IVFlowRate]: 'IV Flow Rate',
+  [View.Alligation]: 'Alligation Calculator',
+  [View.HospitalCalculations]: 'Hospital Calculations'
+};
+
+const Header: React.FC<HeaderProps> = ({ currentView, onBack, showBack }) => {
+  const navigate = useNavigate();
+  const bgColor = viewColors[currentView] || 'bg-white';
+  const isDashboard = currentView === View.Dashboard;
+  const textColor = isDashboard ? 'text-slate-800' : 'text-white';
+  
+  const handleBack = () => {
+    if (currentView !== View.Dashboard) {
+      onBack?.();
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-200">
+    <header className={`${bgColor} sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-200 transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8 flex items-center">
-        {showBack && (
-          <button 
-            onClick={onBack}
-            className="mr-4 p-1 rounded-full hover:bg-slate-100 transition-colors"
+        {(showBack && !isDashboard) && (
+          <button
+            onClick={handleBack}
+            className={`mr-4 p-1 rounded-full ${isDashboard ? 'text-teal-600 hover:bg-teal-50' : 'text-white/90 hover:bg-white/20'} transition-colors`}
             aria-label="Go back"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
           </button>

@@ -11,6 +11,19 @@ export enum View {
   Alligation = 'ALLIGATION',
 }
 
+export const viewColors: Record<View, string> = {
+  [View.Dashboard]: 'bg-white',
+  [View.DaysSupplyCalc]: 'bg-blue-500',
+  [View.Glossary]: 'bg-purple-500',
+  [View.PillIdentifier]: 'bg-amber-500',
+  [View.SigGlossary]: 'bg-emerald-500',
+  [View.FlashCards]: 'bg-rose-500',
+  [View.InjectionGuide]: 'bg-indigo-500',
+  [View.HospitalCalculations]: 'bg-teal-500',
+  [View.IVFlowRate]: 'bg-cyan-500',
+  [View.Alligation]: 'bg-fuchsia-500',
+};
+
 export enum CalculatorType {
   Oral = 'Oral',
   Inhaler = 'Inhaler',

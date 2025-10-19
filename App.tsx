@@ -62,7 +62,11 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-100">
-      <Header onBack={goBack} showBack={currentView !== View.Dashboard} />
+      <Header 
+        currentView={currentView}
+        onBack={goBack} 
+        showBack={currentView !== View.Dashboard} 
+      />
       
       {/* Main content */}
       <main className="w-full">
