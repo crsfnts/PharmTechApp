@@ -4,10 +4,12 @@ import Dashboard from './components/Dashboard.tsx';
 import DaysSupplyCalculator from './components/DosageCalculator.tsx';
 import Glossary from './components/DrugLookup.tsx';
 import PillIdentifier from './components/PillIdentifier.tsx';
-import SigGlossary from './components/Abbreviations.tsx';
+import SigGlossary from './components/Abbreviations';
+import SIGTrainer from './components/SIGTrainer';
 import Header from './components/Header.tsx';
 import PTCBLearning from './components/FlashCards.tsx';
 import InjectionGuide from './components/InjectionGuide.tsx';
+import IVFlowRateCalculator from './components/IVFlowRateCalculator.tsx';
 import Sidebar from './components/Sidebar.tsx';
 import MobileNav from './components/MobileNav.tsx';
 
@@ -25,13 +27,15 @@ const App: React.FC = () => {
       case View.DaysSupplyCalc:
         return <DaysSupplyCalculator setView={setView} />;
       case View.SigGlossary:
-        return <SigGlossary setView={setView} />;
+        return <SIGTrainer setView={setView} />;
       case View.PillIdentifier:
         return <PillIdentifier setView={setView} />;
       case View.FlashCards:
         return <PTCBLearning setView={setView} />;
       case View.InjectionGuide:
         return <InjectionGuide setView={setView} />;
+      case View.IVFlowRate:
+        return <IVFlowRateCalculator setView={setView} />;
       case View.Dashboard:
       default:
         return <Dashboard setView={setView} />;

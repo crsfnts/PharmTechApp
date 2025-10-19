@@ -6,6 +6,7 @@ export enum View {
   SigGlossary = 'SIG_GLOSSARY',
   FlashCards = 'FLASH_CARDS',
   InjectionGuide = 'INJECTION_GUIDE',
+  IVFlowRate = 'IV_FLOW_RATE',
 }
 
 export enum CalculatorType {
