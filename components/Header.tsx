@@ -9,9 +9,9 @@ interface HeaderProps {
 }
 
 const viewTitles: Record<View, string> = {
-  [View.Dashboard]: 'Pharm-Assist Tech',
-  [View.Glossary]: 'Glossary',
-  [View.SigGlossary]: 'Sig Trainer',
+  [View.Dashboard]: 'RxMate',
+  [View.Glossary]: 'Drug Lookup',
+  [View.SigGlossary]: 'SIG Code Trainer',
   [View.DaysSupplyCalc]: 'Days Supply Calculator',
   [View.PillIdentifier]: 'Pill Identifier',
   [View.FlashCards]: 'PTCB Prep',
@@ -21,9 +21,24 @@ const viewTitles: Record<View, string> = {
   [View.HospitalCalculations]: 'Hospital Calculations'
 };
 
+// Color mapping for each view
+const viewColors: Record<View, { from: string; to: string }> = {
+  [View.Dashboard]: { from: 'from-blue-600', to: 'to-blue-500' },
+  [View.DaysSupplyCalc]: { from: 'from-blue-600', to: 'to-blue-500' },
+  [View.HospitalCalculations]: { from: 'from-teal-600', to: 'to-emerald-500' },
+  [View.Glossary]: { from: 'from-violet-600', to: 'to-purple-500' },
+  [View.PillIdentifier]: { from: 'from-amber-600', to: 'to-orange-500' },
+  [View.SigGlossary]: { from: 'from-emerald-600', to: 'to-emerald-500' },
+  [View.FlashCards]: { from: 'from-rose-600', to: 'to-pink-500' },
+  [View.InjectionGuide]: { from: 'from-indigo-600', to: 'to-indigo-500' },
+  [View.IVFlowRate]: { from: 'from-cyan-600', to: 'to-cyan-500' },
+  [View.Alligation]: { from: 'from-fuchsia-600', to: 'to-fuchsia-500' },
+};
+
 const Header: React.FC<HeaderProps> = ({ currentView, onBack, showBack }) => {
   const { primaryColor, textColor, borderColor } = useTheme();
   const isDashboard = currentView === View.Dashboard;
+  const currentColors = viewColors[currentView] || viewColors[View.Dashboard];
 
   const handleBack = () => {
     if (currentView !== View.Dashboard && onBack) {
@@ -39,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, onBack, showBack }) => {
   };
 
   return (
-    <header className={`sticky top-0 z-50 glass-effect transition-all duration-300 ${isDashboard ? 'bg-white/95' : 'bg-gradient-to-r from-blue-600 to-blue-500 text-white'} border-b ${isDashboard ? 'border-neutral-200' : 'border-white/20'} shadow-sm`}>
+    <header className={`sticky top-0 z-50 glass-effect transition-all duration-300 ${isDashboard ? 'bg-white/95' : `bg-gradient-to-r ${currentColors.from} ${currentColors.to} text-white`} border-b ${isDashboard ? 'border-neutral-200' : 'border-white/20'} shadow-sm`}>
       <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -67,7 +82,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, onBack, showBack }) => {
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className={`text-xl sm:text-2xl font-bold leading-tight ${isDashboard ? 'text-neutral-900' : 'text-white'}`}>
-                    {isDashboard ? 'Pharm-Assist Tech' : viewTitles[currentView]}
+                    {isDashboard ? 'RxMate' : viewTitles[currentView]}
                   </h1>
                   {isDashboard && (
                     <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-blue-100 text-blue-700 border border-blue-200">

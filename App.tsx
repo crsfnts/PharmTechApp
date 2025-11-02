@@ -85,14 +85,14 @@ const App: React.FC = () => {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-neutral-900">Pharm-Assist Tech v2.0</p>
+                  <p className="text-sm font-semibold text-neutral-900">RxMate v2.0</p>
                   <p className="text-xs text-neutral-600">Professional Edition</p>
                 </div>
               </div>
 
               <div className="text-center md:text-right">
                 <p className="text-xs text-neutral-600">
-                  &copy; 2024 Pharm-Assist Tech. All information should be verified by a licensed pharmacist.
+                  &copy; 2024 RxMate. All information should be verified by a licensed pharmacist.
                 </p>
                 <p className="text-xs text-neutral-500 mt-1">
                   Created with care by <span className="font-semibold text-neutral-700">Christopher Fuentes</span>

@@ -48,6 +48,7 @@ export interface DrugInfo {
   dosageForms: string[];
   commonSideEffects: string[];
   pharmacology: string;
+  schedule?: string; // DEA schedule classification (II, III, IV, V, or undefined for non-controlled)
 }
 
 export interface Abbreviation {
@@ -58,6 +59,7 @@ export interface Abbreviation {
 export interface TopDrug {
   brand: string;
   generic: string;
+  schedule?: string; // DEA schedule classification
 }
 
 export interface FlashCard {

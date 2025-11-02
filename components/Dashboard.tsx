@@ -145,7 +145,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setView }) => {
           </span>
         </div>
         <h1 className="text-4xl sm:text-5xl font-bold text-neutral-900 mb-3 leading-tight">
-          Welcome to Pharm-Assist Tech
+          Welcome to RxMate
         </h1>
         <p className="text-lg text-neutral-600 max-w-2xl">
           Your comprehensive suite of professional tools and learning resources designed for pharmacy technicians.
