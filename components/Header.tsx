@@ -1,6 +1,5 @@
 import React from 'react';
 import { View } from '../types';
-import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 
 interface HeaderProps {
@@ -22,47 +21,78 @@ const viewTitles: Record<View, string> = {
   [View.HospitalCalculations]: 'Hospital Calculations'
 };
 
-const Header: React.FC<HeaderProps> = ({ currentView, onBack, showBackButton }) => {
-  const navigate = useNavigate();
+const Header: React.FC<HeaderProps> = ({ currentView, onBack, showBack }) => {
   const { primaryColor, textColor, borderColor } = useTheme();
   const isDashboard = currentView === View.Dashboard;
-  
+
   const handleBack = () => {
-    if (currentView !== View.Dashboard) {
-      onBack?.();
-    } else {
-      navigate('/');
+    if (currentView !== View.Dashboard && onBack) {
+      onBack();
     }
   };
 
+  // Calculate progress percentage based on view (for non-dashboard views)
+  const getProgressPercentage = () => {
+    if (isDashboard) return 0;
+    // Simple progress indicator based on view type
+    return 33;
+  };
+
   return (
-    <header className={`${primaryColor} sticky top-0 z-50 backdrop-blur transition-colors duration-300 ${isDashboard ? 'bg-white/80' : ''} border-b ${borderColor}`}>
-      <div className="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8 flex items-center">
-        {(showBack && !isDashboard) && (
-          <button
-            onClick={handleBack}
-            className={`mr-4 p-1 rounded-full ${isDashboard ? 'text-teal-600 hover:bg-teal-50' : 'text-white/90 hover:bg-white/20'} transition-colors`}
-            aria-label="Go back"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-          </button>
-        )}
-        <div className="flex items-center gap-3">
-          <span className={`inline-flex items-center justify-center h-9 w-9 rounded-lg ${isDashboard ? 'bg-teal-50 text-teal-600' : 'bg-white/20 text-white'} ring-1 ${isDashboard ? 'ring-teal-500/10' : 'ring-white/20'}`}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-              <path d="M9 13a1 1 0 011-1h0a1 1 0 110 2H9a1 1 0 01-1-1z" />
-              <path d="M9 13a1 1 0 011-1h0a1 1 0 110 2H9a1 1 0 01-1-1zm2 0a1 1 0 011-1h0a1 1 0 110 2h-1a1 1 0 01-1-1z" />
-            </svg>
-          </span>
-          <div>
-            <h1 className="text-lg sm:text-xl font-semibold leading-tight text-slate-900">Pharm-Assist Tech</h1>
-            <p className="text-xs text-slate-500">Tools and learning resources for pharmacy technicians</p>
+    <header className={`sticky top-0 z-50 glass-effect transition-all duration-300 ${isDashboard ? 'bg-white/95' : 'bg-gradient-to-r from-blue-600 to-blue-500 text-white'} border-b ${isDashboard ? 'border-neutral-200' : 'border-white/20'} shadow-sm`}>
+      <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            {(showBack && !isDashboard) && (
+              <button
+                onClick={handleBack}
+                className={`group p-2 rounded-xl ${isDashboard ? 'text-blue-600 hover:bg-blue-50' : 'text-white/90 hover:bg-white/20'} transition-all duration-200 hover:scale-105 active:scale-95`}
+                aria-label="Go back"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+              </button>
+            )}
+
+            <div className="flex items-center gap-3">
+              {/* Pharmacy Cross Icon */}
+              <div className={`relative inline-flex items-center justify-center h-11 w-11 rounded-2xl ${isDashboard ? 'bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/20' : 'bg-white/20 backdrop-blur-sm'} ring-2 ${isDashboard ? 'ring-blue-500/20' : 'ring-white/30'} transition-all duration-300 group-hover:scale-110`}>
+                <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${isDashboard ? 'text-white' : 'text-white'}`} viewBox="0 0 24 24" fill="currentColor">
+                  {/* Medical Cross */}
+                  <path d="M14 2H10C9.45 2 9 2.45 9 3V9H3C2.45 9 2 9.45 2 10V14C2 14.55 2.45 15 3 15H9V21C9 21.55 9.45 22 10 22H14C14.55 22 15 21.55 15 21V15H21C21.55 15 22 14.55 22 14V10C22 9.45 21.55 9 21 9H15V3C15 2.45 14.55 2 14 2Z"/>
+                </svg>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className={`text-xl sm:text-2xl font-bold leading-tight ${isDashboard ? 'text-neutral-900' : 'text-white'}`}>
+                    {isDashboard ? 'Pharm-Assist Tech' : viewTitles[currentView]}
+                  </h1>
+                  {isDashboard && (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-blue-100 text-blue-700 border border-blue-200">
+                      v2.0
+                    </span>
+                  )}
+                </div>
+                <p className={`text-xs sm:text-sm mt-0.5 ${isDashboard ? 'text-neutral-600' : 'text-white/90'}`}>
+                  {isDashboard ? 'Professional tools for pharmacy technicians' : 'Dashboard / ' + viewTitles[currentView]}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Progress Indicator for Non-Dashboard Views */}
+      {!isDashboard && (
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
+          <div
+            className="h-full bg-white/60 transition-all duration-500 ease-out"
+            style={{ width: `${getProgressPercentage()}%` }}
+          />
+        </div>
+      )}
     </header>
   );
 };

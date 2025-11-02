@@ -17,14 +17,14 @@ const CalculatorInput: React.FC<{
   min?: string;
 }> = ({ label, value, onChange, placeholder, type = "number", min = "0" }) => (
     <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">{label}</label>
+        <label className="block text-sm font-semibold text-neutral-700 mb-2">{label}</label>
         <input
             type={type}
             value={value}
             onChange={onChange}
             placeholder={placeholder || "0"}
             min={min}
-            className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+            className="w-full px-4 py-3 bg-white border border-neutral-300 rounded-xl shadow-sm focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all duration-200 text-neutral-900 placeholder:text-neutral-400 hover:border-neutral-400"
         />
     </div>
 );
@@ -90,14 +90,14 @@ const InhalerCalculator: React.FC<{ setResult: (res: number | null) => void }> =
     }, [selectedInhalerPuffs, numInhalers, puffsPerUse, usesPerDay, setResult]);
 
     return (
-        <div className="space-y-4 animate-fade-in">
+        <div className="space-y-5 animate-fade-in">
             <div>
-                <label htmlFor="inhaler-select" className="block text-sm font-medium text-slate-700 mb-1">Select Inhaler</label>
+                <label htmlFor="inhaler-select" className="block text-sm font-semibold text-neutral-700 mb-2">Select Inhaler</label>
                 <select
                     id="inhaler-select"
                     onChange={handleInhalerChange}
                     value={selectedInhalerPuffs}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white"
+                    className="w-full px-4 py-3 bg-white border border-neutral-300 rounded-xl shadow-sm focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all duration-200 text-neutral-900 hover:border-neutral-400"
                 >
                     {COMMON_INHALERS.map(inhaler => (
                         <option key={inhaler.name} value={inhaler.puffs}>{inhaler.name} ({inhaler.puffs > 0 ? `${inhaler.puffs} puffs` : '...'})</option>
@@ -166,14 +166,14 @@ const InjectableCalculator: React.FC<{ setResult: (res: number | null) => void }
     }, [totalVolume, doseVolume, freqValue, freqUnit, setResult]);
 
     return (
-        <div className="space-y-4 animate-fade-in">
+        <div className="space-y-5 animate-fade-in">
             <div>
-                <label htmlFor="injectable-select" className="block text-sm font-medium text-slate-700 mb-1">Select Injectable (Optional)</label>
+                <label htmlFor="injectable-select" className="block text-sm font-semibold text-neutral-700 mb-2">Select Injectable (Optional)</label>
                 <select
                     id="injectable-select"
                     onChange={handleInjectableChange}
                     value={selectedInjectable}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white"
+                    className="w-full px-4 py-3 bg-white border border-neutral-300 rounded-xl shadow-sm focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all duration-200 text-neutral-900 hover:border-neutral-400"
                 >
                     {COMMON_INJECTABLES.map(injectable => (
                         <option key={injectable.name} value={injectable.totalVolume > 0 ? JSON.stringify(injectable) : ''}>
@@ -185,20 +185,20 @@ const InjectableCalculator: React.FC<{ setResult: (res: number | null) => void }
             <CalculatorInput label="Total Volume Dispensed (mL)" value={totalVolume} onChange={e => setTotalVolume(e.target.value)} placeholder="e.g., 10 for a vial" />
             <CalculatorInput label="Dose per Injection (mL)" value={doseVolume} onChange={e => setDoseVolume(e.target.value)} placeholder="e.g., 0.5" />
             <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Frequency</label>
-                <div className="flex gap-2">
+                <label className="block text-sm font-semibold text-neutral-700 mb-2">Frequency</label>
+                <div className="flex gap-3">
                     <input
                         type="number"
                         value={freqValue}
                         onChange={e => setFreqValue(e.target.value)}
                         placeholder="e.g., 1"
                         min="0"
-                        className="w-1/3 px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                        className="w-1/3 px-4 py-3 bg-white border border-neutral-300 rounded-xl shadow-sm focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all duration-200 text-neutral-900 placeholder:text-neutral-400 hover:border-neutral-400"
                     />
                     <select
                         value={freqUnit}
                         onChange={e => setFreqUnit(e.target.value as any)}
-                        className="w-2/3 px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white"
+                        className="w-2/3 px-4 py-3 bg-white border border-neutral-300 rounded-xl shadow-sm focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all duration-200 text-neutral-900 hover:border-neutral-400"
                     >
                         <option value="day">time(s) per day</option>
                         <option value="week">time(s) per week</option>
@@ -242,7 +242,7 @@ const DaysSupplyCalculator: React.FC<DaysSupplyCalculatorProps> = ({ setView }) 
     return (
         <button
             onClick={() => setType(label)}
-            className={`w-full py-2 px-4 text-sm font-semibold rounded-md transition-all duration-300 ${isActive ? 'bg-teal-600 text-white shadow' : 'bg-slate-200 text-slate-600 hover:bg-slate-300'}`}
+            className={`relative w-full py-3 px-4 text-sm font-semibold rounded-xl transition-all duration-300 ${isActive ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30' : 'bg-transparent text-neutral-600 hover:bg-neutral-100'}`}
         >
             {label}
         </button>
@@ -250,25 +250,38 @@ const DaysSupplyCalculator: React.FC<DaysSupplyCalculatorProps> = ({ setView }) 
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
-        <h2 className="text-2xl font-bold text-slate-800 mb-1">Days Supply Calculator</h2>
-        <p className="text-slate-500 mb-6">Calculate the duration for different types of prescriptions.</p>
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="bg-white p-8 sm:p-10 rounded-2xl shadow-sm border border-neutral-200">
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-neutral-900 mb-2">Days Supply Calculator</h2>
+          <p className="text-neutral-600">Calculate the duration for different types of prescriptions with precision.</p>
+        </div>
 
-        <div className="grid grid-cols-3 gap-2 bg-slate-200 p-1 rounded-lg mb-6">
+        <div className="flex gap-2 bg-neutral-100 p-2 rounded-2xl mb-8">
             <SegmentedControlButton label={CalculatorType.Oral} current={calculatorType} setType={handleSetType} />
             <SegmentedControlButton label={CalculatorType.Inhaler} current={calculatorType} setType={handleSetType} />
             <SegmentedControlButton label={CalculatorType.Injectable} current={calculatorType} setType={handleSetType} />
         </div>
-        
-        <div className="space-y-4">
+
+        <div className="space-y-6">
             {renderCalculator()}
         </div>
 
         {result !== null && result > 0 && (
-            <div className="mt-8 p-6 bg-teal-50 border-l-4 border-teal-500 rounded-r-lg animate-fade-in">
-                <h3 className="text-sm font-semibold text-teal-800">Calculated Days Supply</h3>
-                <p className="text-4xl font-bold text-teal-600">{result} <span className="text-2xl font-medium">days</span></p>
+            <div className="mt-8 p-8 bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-2xl animate-fade-in shadow-sm">
+                <div className="flex items-center gap-3 mb-3">
+                    <div className="h-10 w-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h3 className="text-lg font-semibold text-emerald-900">Calculated Days Supply</h3>
+                </div>
+                <div className="flex items-baseline gap-2">
+                    <p className="text-5xl font-bold text-emerald-700">{result}</p>
+                    <span className="text-2xl font-semibold text-emerald-600">days</span>
+                </div>
+                <p className="text-sm text-emerald-700 mt-3">Remember to verify this calculation with a licensed pharmacist.</p>
             </div>
         )}
       </div>
