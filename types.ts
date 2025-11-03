@@ -9,6 +9,9 @@ export enum View {
   HospitalCalculations = 'HOSPITAL_CALCULATIONS',
   IVFlowRate = 'IV_FLOW_RATE',
   Alligation = 'ALLIGATION',
+  BillingInsurance = 'BILLING_INSURANCE',
+  DiscountCardFinder = 'DISCOUNT_CARD_FINDER',
+  PriorAuthHelper = 'PRIOR_AUTH_HELPER',
 }
 
 export const viewColors: Record<View, string> = {
@@ -22,6 +25,9 @@ export const viewColors: Record<View, string> = {
   [View.HospitalCalculations]: 'bg-teal-500',
   [View.IVFlowRate]: 'bg-cyan-500',
   [View.Alligation]: 'bg-fuchsia-500',
+  [View.BillingInsurance]: 'bg-green-500',
+  [View.DiscountCardFinder]: 'bg-orange-500',
+  [View.PriorAuthHelper]: 'bg-sky-500',
 };
 
 export enum CalculatorType {

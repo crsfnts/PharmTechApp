@@ -18,7 +18,10 @@ const viewTitles: Record<View, string> = {
   [View.InjectionGuide]: 'Injection Guide',
   [View.IVFlowRate]: 'IV Flow Rate',
   [View.Alligation]: 'Alligation Calculator',
-  [View.HospitalCalculations]: 'Hospital Calculations'
+  [View.HospitalCalculations]: 'Hospital Calculations',
+  [View.BillingInsurance]: 'Billing & Insurance',
+  [View.DiscountCardFinder]: 'Discount Card Finder',
+  [View.PriorAuthHelper]: 'Prior Authorization Helper',
 };
 
 // Color mapping for each view
@@ -33,6 +36,9 @@ const viewColors: Record<View, { from: string; to: string }> = {
   [View.InjectionGuide]: { from: 'from-indigo-600', to: 'to-indigo-500' },
   [View.IVFlowRate]: { from: 'from-cyan-600', to: 'to-cyan-500' },
   [View.Alligation]: { from: 'from-fuchsia-600', to: 'to-fuchsia-500' },
+  [View.BillingInsurance]: { from: 'from-green-600', to: 'to-green-500' },
+  [View.DiscountCardFinder]: { from: 'from-orange-600', to: 'to-orange-500' },
+  [View.PriorAuthHelper]: { from: 'from-sky-600', to: 'to-sky-500' },
 };
 
 const Header: React.FC<HeaderProps> = ({ currentView, onBack, showBack }) => {

@@ -11,6 +11,9 @@ import InjectionGuide from './components/InjectionGuide';
 import IVFlowRateCalculator from './components/IVFlowRateCalculator';
 import AlligationCalculator from './components/AlligationCalculator';
 import HospitalCalculations from './components/HospitalCalculations';
+import BillingInsurance from './components/BillingInsurance';
+import DiscountCardFinder from './components/DiscountCardFinder';
+import PriorAuthHelper from './components/PriorAuthHelper';
 import { ThemeProvider } from './context/ThemeContext';
 
 const App: React.FC = () => {
@@ -20,6 +23,8 @@ const App: React.FC = () => {
   const setView = useCallback((view: View) => {
     setViewHistory(prev => [...prev, currentView]);
     setCurrentView(view);
+    // Scroll to top when changing views
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentView]);
 
   const goBack = useCallback(() => {
@@ -30,6 +35,8 @@ const App: React.FC = () => {
     } else {
       setCurrentView(View.Dashboard);
     }
+    // Scroll to top when going back
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [viewHistory]);
 
   const renderView = () => {
@@ -54,6 +61,12 @@ const App: React.FC = () => {
         return <IVFlowRateCalculator setView={setView} />;
       case View.Alligation:
         return <AlligationCalculator setView={setView} />;
+      case View.BillingInsurance:
+        return <BillingInsurance setView={setView} />;
+      case View.DiscountCardFinder:
+        return <DiscountCardFinder setView={setView} />;
+      case View.PriorAuthHelper:
+        return <PriorAuthHelper setView={setView} />;
       default:
         // Default to Dashboard as the home view
         return <Dashboard setView={setView} />;
@@ -69,9 +82,11 @@ const App: React.FC = () => {
           showBack={currentView !== View.Dashboard}
         />
 
-        {/* Main content */}
+        {/* Main content with view transition */}
         <main className="flex-1 w-full">
-          {renderView()}
+          <div key={currentView} className="animate-fade-in">
+            {renderView()}
+          </div>
         </main>
 
         {/* Enhanced Footer */}

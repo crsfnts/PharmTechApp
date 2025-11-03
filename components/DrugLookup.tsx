@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { View } from '../types.ts';
 import type { DrugInfo } from '../types.ts';
 import { fetchDrugInfo } from './geminiService.ts';
@@ -25,6 +25,11 @@ const Glossary: React.FC<GlossaryProps> = ({ setView }) => {
   const [error, setError] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<'brand' | 'generic' | 'schedule'>('generic');
   const [scheduleFilter, setScheduleFilter] = useState<'all' | 'II' | 'III' | 'IV' | 'V'>('all');
+
+  // Ensure page starts at top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
 
   const executeSearch = useCallback(async (searchQuery: string) => {

@@ -2,16 +2,11 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { DrugInfo } from '../types.ts';
 
-// The API key has been added here as requested to allow the application to run.
-// For production environments, it's strongly recommended to use a more secure method
-// like environment variables loaded during a build process or a backend proxy,
-// to avoid exposing the key in client-side code.
-const API_KEY = "AIzaSyBxDCMOXDe3mbSsBEgWSEQp9Kr0l_fbsuQ";
+// Load API key from environment variables for better security
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 if (!API_KEY) {
-    // This is a critical error, the app cannot function without the API key.
-    // In a real app, you might want to display a user-friendly error message.
-    throw new Error("Google AI API Key is missing. Please add it to components/geminiService.ts");
+    throw new Error("Google AI API Key is missing. Please add VITE_GEMINI_API_KEY to your .env.local file");
 }
 
 const ai = new GoogleGenerativeAI(API_KEY);
@@ -117,27 +112,41 @@ export async function identifyPill(characteristics: PillCharacteristics): Promis
           ]
         });
         let text = result.response.text();
-        // Basic Markdown to HTML
-         text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/^- (.*$)/gm, '<li>$1</li>')
-                    .replace(
-                      /(\n)?(<ul>|<ol>)?((<li>.*<\/li>)+)(<\/ul>|<\/ol>)?(\n)?/gs,
-                      (
-                        _m: string,
-                        _p1: string,
-                        _p2: string,
-                        p3: string,
-                        _p4: string,
-                        _p5: string,
-                        _p6: string
-                      ) => {
-                        return `<ul>${p3}</ul>`;
-                      }
-                    )
-                    .replace(/\n/g, '<br />')
-                    .replace(/<br \s*\/?><ul>/g, '<ul>')
-                    .replace(/<\/ul><br \s*\/?>/g, '</ul>');
-        return text;
+        // Simple and reliable Markdown to HTML conversion
+        // Convert bold text
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        // Convert bullet lists
+        const lines = text.split('\n');
+        const processedLines: string[] = [];
+        let inList = false;
+
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i];
+          const isListItem = line.trim().startsWith('- ');
+
+          if (isListItem) {
+            if (!inList) {
+              processedLines.push('<ul class="list-disc pl-6 space-y-1">');
+              inList = true;
+            }
+            processedLines.push(`<li>${line.trim().substring(2)}</li>`);
+          } else {
+            if (inList) {
+              processedLines.push('</ul>');
+              inList = false;
+            }
+            if (line.trim()) {
+              processedLines.push(`<p class="mb-2">${line}</p>`);
+            }
+          }
+        }
+
+        if (inList) {
+          processedLines.push('</ul>');
+        }
+
+        return processedLines.join('\n');
       } catch (err) {
         console.warn(`Model ${modelName} failed for identifyPill:`, err);
         lastErr = err;
