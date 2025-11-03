@@ -5,11 +5,18 @@ import type { DrugInfo } from '../types.ts';
 // Load API key from environment variables for better security
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-if (!API_KEY) {
-    throw new Error("Google AI API Key is missing. Please add VITE_GEMINI_API_KEY to your .env.local file");
-}
+// Initialize AI client lazily to avoid breaking the app if API key is not set
+let ai: GoogleGenerativeAI | null = null;
 
-const ai = new GoogleGenerativeAI(API_KEY);
+function getAI(): GoogleGenerativeAI {
+    if (!API_KEY) {
+        throw new Error("Google AI API Key is missing. Please add VITE_GEMINI_API_KEY to your environment variables in Netlify");
+    }
+    if (!ai) {
+        ai = new GoogleGenerativeAI(API_KEY);
+    }
+    return ai;
+}
 const MODEL_CANDIDATES = [
   "gemini-2.0-flash",
   "gemini-1.5-flash",
@@ -31,7 +38,7 @@ Return ONLY a single valid JSON object (no markdown fences or extra text) descri
   let lastErr: unknown = null;
   for (const modelName of MODEL_CANDIDATES) {
     try {
-      const model = ai.getGenerativeModel({ model: modelName });
+      const model = getAI().getGenerativeModel({ model: modelName });
       const result = await model.generateContent({
         contents: [
           {
@@ -105,7 +112,7 @@ export async function identifyPill(characteristics: PillCharacteristics): Promis
     let lastErr: unknown = null;
     for (const modelName of MODEL_CANDIDATES) {
       try {
-        const model = ai.getGenerativeModel({ model: modelName });
+        const model = getAI().getGenerativeModel({ model: modelName });
         const result = await model.generateContent({
           contents: [
             { role: 'user', parts: [{ text: prompt }]}
