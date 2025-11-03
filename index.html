@@ -11,8 +11,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Add Babel Standalone for in-browser JSX/TS compilation -->
-    <script src="https://unpkg.com/@babel/standalone@7.24.8/babel.min.js"></script>
     <style>
       /* Professional Typography & Base Styles */
       * {
@@ -308,22 +306,9 @@
         transform: rotateY(180deg);
       }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
-    "react": "https://esm.sh/react@^19.1.0",
-    "react/": "https://esm.sh/react@^19.1.0/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.8.0"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
 </head>
   <body class="bg-neutral-50 text-neutral-900">
     <div id="root"></div>
-    <!-- Add data-presets to tell Babel how to compile the code -->
-    <script type="text/babel" data-presets="react,typescript" data-type="module" src="/index.tsx"></script>
-  <script type="module" src="/index.tsx"></script>
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>
