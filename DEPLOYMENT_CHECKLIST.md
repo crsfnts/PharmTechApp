@@ -2,14 +2,23 @@
 
 ## Issues Fixed
 
-The blank screen issue on Netlify was caused by missing React plugin for Vite. The following fixes have been applied:
+The blank screen issue on Netlify had TWO root causes:
 
-1. ✅ Added `@vitejs/plugin-react` for proper React/JSX transformation
-2. ✅ Updated `vite.config.ts` to use React plugin
-3. ✅ Fixed environment variable handling (VITE_GEMINI_API_KEY)
-4. ✅ Added sourcemaps for debugging
-5. ✅ Created proper `netlify.toml` configuration
-6. ✅ Added `_redirects` file for SPA routing
+### 1. Missing React Plugin
+- ✅ Added `@vitejs/plugin-react` for proper React/JSX transformation
+- ✅ Updated `vite.config.ts` to use React plugin
+- ✅ Fixed environment variable handling (VITE_GEMINI_API_KEY)
+- ✅ Added sourcemaps for debugging
+
+### 2. Immediate Module-Level Error (CRITICAL FIX)
+- ✅ **geminiService.ts was throwing error on module load** if API key wasn't set
+- ✅ Changed to lazy initialization - API client only created when actually needed
+- ✅ App now loads successfully even without API key set
+- ✅ Error shown only when user tries to use AI features
+
+### 3. Netlify Configuration
+- ✅ Created proper `netlify.toml` configuration
+- ✅ Added `_redirects` file for SPA routing
 
 ## Steps to Deploy
 
