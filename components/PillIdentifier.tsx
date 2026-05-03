@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View } from '../types.ts';
 import Spinner from './Spinner.tsx';
 import { identifyPill } from './geminiService.ts';
+import { AppPage, PageHeader, SectionCard, SectionLabel, inputClass, primaryButtonClass } from './AppLayout.tsx';
 
 interface PillIdentifierProps {
   setView: (view: View) => void;
@@ -9,14 +10,14 @@ interface PillIdentifierProps {
 
 const FormInput: React.FC<{ label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, placeholder: string, disabled: boolean }> = ({ label, value, onChange, placeholder, disabled }) => (
   <div>
-    <label className="block text-sm font-semibold text-neutral-700 mb-2">{label}</label>
+    <label className="block text-sm font-semibold text-slate-700 mb-2">{label}</label>
     <input
       type="text"
       value={value}
       onChange={onChange}
       placeholder={placeholder}
       disabled={disabled}
-      className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all duration-200 hover:border-neutral-400 disabled:bg-neutral-100 disabled:cursor-not-allowed"
+      className={inputClass}
     />
   </div>
 );
@@ -27,6 +28,7 @@ const PillIdentifier: React.FC<PillIdentifierProps> = ({ setView }) => {
   const [color, setColor] = useState('');
   const [imprint1, setImprint1] = useState('');
   const [imprint2, setImprint2] = useState('');
+  const [score, setScore] = useState('');
 
   // Ensure page starts at top when component mounts
   useEffect(() => {
@@ -60,49 +62,85 @@ const PillIdentifier: React.FC<PillIdentifierProps> = ({ setView }) => {
   const isFormIncomplete = !color || !imprint1;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="bg-white p-8 sm:p-10 rounded-2xl shadow-sm border border-neutral-200">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-neutral-900 mb-2">Pill Identifier</h2>
-          <p className="text-neutral-600">Enter the physical characteristics of the medication to identify it using AI.</p>
-        </div>
+    <AppPage>
+      <PageHeader
+        title="Pill Identifier"
+        subtitle="Search by the physical characteristics printed on the medication."
+      />
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormInput label="Shape" value={shape} onChange={e => setShape(e.target.value)} placeholder="e.g., Round, Oval" disabled={isLoading} />
-            <FormInput label="Color" value={color} onChange={e => setColor(e.target.value)} placeholder="e.g., White, Blue" disabled={isLoading} />
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <SectionCard>
+          <SectionLabel>1. Imprint</SectionLabel>
+          <FormInput label="Imprint on pill" value={imprint1} onChange={e => setImprint1(e.target.value)} placeholder="e.g., LUPIN, 10" disabled={isLoading} />
+        </SectionCard>
 
-          <div>
-            <label className="block text-sm font-semibold text-neutral-700 mb-2">Form</label>
-            <div className="flex gap-6">
-              <label className="flex items-center cursor-pointer group">
-                <input type="radio" name="formType" value="tablet" checked={formType === 'tablet'} onChange={() => setFormType('tablet')} className="h-4 w-4 text-amber-600 border-neutral-300 focus:ring-amber-500 focus:ring-offset-2" disabled={isLoading} />
-                <span className="ml-2 text-sm font-medium text-neutral-700 group-hover:text-amber-600 transition-colors">Tablet</span>
-              </label>
-              <label className="flex items-center cursor-pointer group">
-                <input type="radio" name="formType" value="capsule" checked={formType === 'capsule'} onChange={() => setFormType('capsule')} className="h-4 w-4 text-amber-600 border-neutral-300 focus:ring-amber-500 focus:ring-offset-2" disabled={isLoading} />
-                <span className="ml-2 text-sm font-medium text-neutral-700 group-hover:text-amber-600 transition-colors">Capsule</span>
-              </label>
+        <SectionCard>
+          <SectionLabel>2. Appearance</SectionLabel>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-700">Shape</label>
+              <select value={shape} onChange={e => setShape(e.target.value)} disabled={isLoading} className={inputClass}>
+                <option value="">Select</option>
+                <option>Round</option>
+                <option>Oval</option>
+                <option>Capsule-shaped</option>
+                <option>Oblong</option>
+                <option>Square</option>
+                <option>Triangle</option>
+              </select>
+            </div>
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-700">Color</label>
+              <select value={color} onChange={e => setColor(e.target.value)} disabled={isLoading} className={inputClass}>
+                <option value="">Select</option>
+                <option>White</option>
+                <option>Blue</option>
+                <option>Pink</option>
+                <option>Yellow</option>
+                <option>Green</option>
+                <option>Orange</option>
+                <option>Brown</option>
+                <option>Red</option>
+              </select>
             </div>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormInput label="Imprint (Side 1)" value={imprint1} onChange={e => setImprint1(e.target.value)} placeholder="e.g., LUPIN, 10" disabled={isLoading} />
-            <FormInput label="Imprint (Side 2 - Optional)" value={imprint2} onChange={e => setImprint2(e.target.value)} placeholder="e.g., 451" disabled={isLoading} />
+          <div className="mt-4">
+            <p className="mb-2 text-sm font-semibold text-slate-700">Form</p>
+            <div className="grid grid-cols-2 gap-2 rounded-2xl bg-slate-100 p-2">
+              {(['tablet', 'capsule'] as const).map(option => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setFormType(option)}
+                  disabled={isLoading}
+                  className={`h-12 rounded-xl text-sm font-semibold capitalize transition ${formType === option ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20' : 'text-slate-600'}`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
           </div>
+        </SectionCard>
 
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold px-6 py-4 rounded-xl hover:from-amber-600 hover:to-amber-700 transform hover:scale-[1.02] transition-all duration-200 disabled:from-neutral-300 disabled:to-neutral-400 disabled:cursor-not-allowed disabled:transform-none shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/30 flex items-center justify-center"
-            disabled={isLoading || isFormIncomplete}
-          >
-            {isLoading ? <Spinner size="sm" /> : 'Identify Pill'}
-          </button>
-        </form>
+        <SectionCard>
+          <SectionLabel helper="Add these when the pill has marks on both sides or a score line.">3. Optional details</SectionLabel>
+          <div className="grid grid-cols-2 gap-3">
+            <FormInput label="Second imprint" value={imprint2} onChange={e => setImprint2(e.target.value)} placeholder="e.g., 451" disabled={isLoading} />
+            <FormInput label="Score" value={score} onChange={e => setScore(e.target.value)} placeholder="e.g., Yes" disabled={isLoading} />
+          </div>
+        </SectionCard>
+
+        <button
+          type="submit"
+          className={primaryButtonClass}
+          disabled={isLoading || isFormIncomplete}
+        >
+          {isLoading ? <Spinner size="sm" /> : 'Search pill'}
+        </button>
+      </form>
 
         {error && (
-          <div className="mt-6 bg-red-50 border-l-4 border-red-500 text-red-700 p-5 rounded-lg flex items-start gap-3">
+          <div className="mt-4 flex items-start gap-3 rounded-2xl border border-red-100 bg-red-50 p-4 text-red-700">
             <svg className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
             </svg>
@@ -111,22 +149,21 @@ const PillIdentifier: React.FC<PillIdentifierProps> = ({ setView }) => {
         )}
 
         {result && !isLoading && (
-          <div className="mt-8 p-6 bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-xl shadow-sm animate-fade-in">
+          <div className="mt-4 animate-fade-in rounded-3xl border border-indigo-100 bg-indigo-50 p-5 shadow-sm">
             <div className="flex items-start gap-3 mb-4">
-              <svg className="w-6 h-6 text-amber-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-indigo-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h3 className="text-xl font-bold text-neutral-900">Identification Results</h3>
+              <h3 className="text-xl font-bold text-slate-950">Identification Results</h3>
             </div>
             <div
-              className="text-neutral-700 space-y-2 prose prose-sm max-w-none prose-strong:text-neutral-900 prose-li:text-neutral-700"
+              className="text-slate-700 space-y-2 prose prose-sm max-w-none prose-strong:text-slate-950 prose-li:text-slate-700"
               dangerouslySetInnerHTML={{ __html: result }}
             >
             </div>
           </div>
         )}
-      </div>
-    </div>
+    </AppPage>
   );
 };
 

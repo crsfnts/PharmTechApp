@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View } from '../types';
+import { AppPage, PageHeader, SectionCard, SectionLabel, inputClass, primaryButtonClass, secondaryButtonClass } from './AppLayout';
 
 interface AlligationCalculatorProps {
   setView: (view: View) => void;
 }
 
-const AlligationCalculator: React.FC<AlligationCalculatorProps> = ({ setView }) => {
+const AlligationCalculator: React.FC<AlligationCalculatorProps> = () => {
   const [desiredStrength, setDesiredStrength] = useState('');
   const [higherStrength, setHigherStrength] = useState('');
   const [lowerStrength, setLowerStrength] = useState('');
@@ -55,37 +56,38 @@ const AlligationCalculator: React.FC<AlligationCalculatorProps> = ({ setView }) 
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h1 className="text-2xl font-bold text-slate-800 mb-2">Alligation Calculator</h1>
-        <p className="text-slate-600 mb-6">Use the tic-tac-toe method to calculate the amounts needed for a desired concentration.</p>
+    <AppPage>
+      <PageHeader
+        title="Alligation"
+        subtitle="Use the tic-tac-toe method to calculate amounts for a desired concentration."
+      />
         
         <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Desired Strength (%)
-            </label>
+          <SectionCard>
+            <SectionLabel>1. What strength do you need?</SectionLabel>
             <input
               type="number"
               value={desiredStrength}
               onChange={(e) => setDesiredStrength(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+              className={inputClass}
               placeholder="e.g., 5"
               min="0"
               step="0.1"
             />
-          </div>
+          </SectionCard>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <SectionCard>
+            <SectionLabel helper="Enter the strengths available to mix.">2. What strengths do you have?</SectionLabel>
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Higher Strength (%)
               </label>
               <input
                 type="number"
                 value={higherStrength}
                 onChange={(e) => setHigherStrength(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                className={inputClass}
                 placeholder="e.g., 10"
                 min="0"
                 step="0.1"
@@ -93,63 +95,63 @@ const AlligationCalculator: React.FC<AlligationCalculatorProps> = ({ setView }) 
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Lower Strength (%)
               </label>
               <input
                 type="number"
                 value={lowerStrength}
                 onChange={(e) => setLowerStrength(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                className={inputClass}
                 placeholder="e.g., 2"
                 min="0"
                 step="0.1"
               />
             </div>
           </div>
+          </SectionCard>
 
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Total Quantity (mL)
-            </label>
+          <SectionCard>
+            <SectionLabel>3. How much final quantity?</SectionLabel>
             <input
               type="number"
               value={totalQuantity}
               onChange={(e) => setTotalQuantity(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+              className={inputClass}
               placeholder="e.g., 100"
               min="0.1"
               step="0.1"
             />
-          </div>
+          </SectionCard>
 
-          <div className="flex space-x-4 pt-2">
+          <div className="grid grid-cols-[1fr_auto] gap-3 pt-2">
             <button
               onClick={calculate}
-              className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+              className={primaryButtonClass}
             >
               Calculate
             </button>
             <button
               type="button"
               onClick={resetForm}
-              className="px-4 py-2 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+              className={secondaryButtonClass}
             >
               Reset
-            </button>
-            <button
-              type="button"
-              onClick={toggleExplanation}
-              className="px-4 py-2 text-teal-600 hover:text-teal-800 focus:outline-none"
-            >
-              {showExplanation ? 'Hide' : 'Show'} Explanation
             </button>
           </div>
         </div>
 
+        <button
+          type="button"
+          onClick={toggleExplanation}
+          className="mt-4 text-sm font-semibold text-indigo-700"
+        >
+          {showExplanation ? 'Hide' : 'Show'} explanation
+        </button>
+
         {showExplanation && (
-          <div className="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
-            <h3 className="text-lg font-medium text-slate-800 mb-2">How to Use the Tic-Tac-Toe Method</h3>
+          <SectionCard className="mt-4 bg-slate-50">
+            <h3 className="text-base font-semibold text-slate-900 mb-2">How to Use the Tic-Tac-Toe Method</h3>
             <ol className="list-decimal list-inside space-y-2 text-slate-700">
               <li>Enter the desired strength percentage you want to achieve</li>
               <li>Enter the higher concentration percentage you have available</li>
@@ -157,7 +159,7 @@ const AlligationCalculator: React.FC<AlligationCalculatorProps> = ({ setView }) 
               <li>Enter the total quantity of the final mixture</li>
               <li>Click Calculate to see the required amounts of each concentration</li>
             </ol>
-            <div className="mt-4 p-3 bg-white border border-slate-200 rounded-md">
+            <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-3">
               <p className="font-medium text-slate-800 mb-2">Example:</p>
               <p className="text-sm text-slate-700">
                 For 100mL of 5% solution using 10% and 2% solutions:
@@ -174,29 +176,28 @@ Total parts = 8 (3 + 5)
 2% solution needed: (5/8) × 100mL = 62.5mL`}
               </pre>
             </div>
-          </div>
+          </SectionCard>
         )}
 
         {result && (
-          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md">
-            <h3 className="text-lg font-medium text-green-800 mb-2">Result</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-3 bg-white rounded-md border border-green-100">
+          <SectionCard className="mt-4 border-emerald-100 bg-emerald-50">
+            <h3 className="text-sm font-semibold text-slate-600 mb-3">Result</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-2xl border border-emerald-100 bg-white p-3">
                 <p className="text-sm text-slate-600">Higher Strength ({higherStrength}%)</p>
-                <p className="text-xl font-bold text-green-700">{result.higher} mL</p>
+                <p className="text-2xl font-bold text-emerald-700">{result.higher} mL</p>
               </div>
-              <div className="p-3 bg-white rounded-md border border-green-100">
+              <div className="rounded-2xl border border-emerald-100 bg-white p-3">
                 <p className="text-sm text-slate-600">Lower Strength ({lowerStrength}%)</p>
-                <p className="text-xl font-bold text-green-700">{result.lower} mL</p>
+                <p className="text-2xl font-bold text-emerald-700">{result.lower} mL</p>
               </div>
             </div>
             <p className="mt-3 text-sm text-slate-600">
               Total: <span className="font-medium">{(result.higher + result.lower).toFixed(2)} mL</span> (should match your desired total quantity)
             </p>
-          </div>
+          </SectionCard>
         )}
-      </div>
-    </div>
+    </AppPage>
   );
 };
 

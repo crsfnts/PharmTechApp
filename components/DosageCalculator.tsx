@@ -2,6 +2,7 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { View, CalculatorType } from '../types.ts';
 import { COMMON_INHALERS } from '../constants.ts';
+import { AppPage, PageHeader, SectionCard, SectionLabel, inputClass } from './AppLayout';
 
 interface DaysSupplyCalculatorProps {
   setView: (view: View) => void;
@@ -26,7 +27,7 @@ const CalculatorInput: React.FC<{
             onChange={onChange}
             placeholder={placeholder || "0"}
             min={min}
-            className="w-full px-4 py-3 bg-white border border-neutral-300 rounded-xl shadow-sm focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all duration-200 text-neutral-900 placeholder:text-neutral-400 hover:border-neutral-400"
+            className={inputClass}
         />
     </div>
 );
@@ -34,49 +35,114 @@ const CalculatorInput: React.FC<{
 
 // --- Oral Calculator ---
 const OralCalculator: React.FC<{ setResult: (res: number | null) => void }> = ({ setResult }) => {
-    const [totalQuantity, setTotalQuantity] = useState('90');
-    const [dosesPerDay, setDosesPerDay] = useState('1');
+    const [totalQuantity, setTotalQuantity] = useState('60');
+    const [doseAmount, setDoseAmount] = useState('1');
+    const [dosesPerDay, setDosesPerDay] = useState('2');
+    const [showMath, setShowMath] = useState(false);
 
-    useMemo(() => {
+    const calculated = useMemo(() => {
         const tq = parseFloat(totalQuantity);
-        const dpd = parseFloat(dosesPerDay);
-        if (tq > 0 && dpd > 0) {
-            setResult(Math.floor(tq / dpd));
-        } else {
-            setResult(null);
+        const dose = parseFloat(doseAmount);
+        const times = parseFloat(dosesPerDay);
+        if (tq > 0 && dose > 0 && times > 0) {
+            const perDay = dose * times;
+            const days = Math.floor(tq / perDay);
+            setResult(days);
+            return { days, perDay, total: tq, dose, times };
         }
-    }, [totalQuantity, dosesPerDay, setResult]);
+        setResult(null);
+        return null;
+    }, [totalQuantity, doseAmount, dosesPerDay, setResult]);
+
+    const presets = [
+        { label: '1 daily', dose: '1', times: '1' },
+        { label: '1 BID', dose: '1', times: '2' },
+        { label: '1 TID', dose: '1', times: '3' },
+        { label: '1 QID', dose: '1', times: '4' },
+        { label: '2 daily', dose: '2', times: '1' },
+    ];
 
     return (
         <div className="space-y-4 animate-fade-in">
-            <CalculatorInput
-                label="Total Quantity Dispensed (e.g., tablets)"
-                value={totalQuantity}
-                onChange={(e) => setTotalQuantity(e.target.value)}
-                placeholder="e.g., 90"
-            />
-            <CalculatorInput
-                label="Doses Per Day"
-                value={dosesPerDay}
-                onChange={(e) => setDosesPerDay(e.target.value)}
-                placeholder="e.g., 1"
-            />
+            <SectionCard>
+                <SectionLabel helper="Use the total quantity from the fill label or prescription.">1. What was dispensed?</SectionLabel>
+                <CalculatorInput
+                    label="Quantity dispensed"
+                    value={totalQuantity}
+                    onChange={(e) => setTotalQuantity(e.target.value)}
+                    placeholder="e.g., 60"
+                />
+            </SectionCard>
+
+            <SectionCard>
+                <SectionLabel helper="Build the directions from the SIG.">2. What does the prescription say?</SectionLabel>
+                <div className="grid grid-cols-[1fr_1fr] gap-3">
+                    <CalculatorInput
+                        label="Take"
+                        value={doseAmount}
+                        onChange={(e) => setDoseAmount(e.target.value)}
+                        placeholder="1"
+                    />
+                    <CalculatorInput
+                        label="Times per day"
+                        value={dosesPerDay}
+                        onChange={(e) => setDosesPerDay(e.target.value)}
+                        placeholder="2"
+                    />
+                </div>
+                <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
+                    {presets.map(preset => (
+                        <button
+                            key={preset.label}
+                            onClick={() => {
+                                setDoseAmount(preset.dose);
+                                setDosesPerDay(preset.times);
+                            }}
+                            className="min-w-max rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 transition active:scale-[0.99]"
+                        >
+                            {preset.label}
+                        </button>
+                    ))}
+                </div>
+            </SectionCard>
+
+            <SectionCard className="border-emerald-100 bg-emerald-50">
+                <p className="text-sm font-semibold text-slate-600">Days supply</p>
+                {calculated ? (
+                    <>
+                        <p className="mt-1 text-4xl font-bold text-emerald-700">{calculated.days} days</p>
+                        <p className="mt-3 text-sm text-slate-600">Quantity per day: <span className="font-semibold text-slate-950">{calculated.perDay} tablets</span></p>
+                        <button onClick={() => setShowMath(current => !current)} className="mt-4 text-sm font-semibold text-indigo-700">
+                            {showMath ? 'Hide math' : 'How we calculated it'}
+                        </button>
+                        {showMath && (
+                            <div className="mt-3 rounded-2xl bg-white/80 p-3 text-sm leading-6 text-slate-700">
+                                <p>{calculated.dose} tablet(s) x {calculated.times} time(s) daily = {calculated.perDay} tablet(s)/day</p>
+                                <p>{calculated.total} tablet(s) dispensed ÷ {calculated.perDay} tablet(s)/day = {calculated.days} days</p>
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <p className="mt-1 text-lg font-semibold text-slate-900">Complete the fields above to calculate.</p>
+                )}
+            </SectionCard>
         </div>
     );
 };
 
 // --- Inhaler Calculator ---
 const InhalerCalculator: React.FC<{ setResult: (res: number | null) => void }> = ({ setResult }) => {
-    const [selectedInhalerPuffs, setSelectedInhalerPuffs] = useState('0');
+    const [selectedInhalerPuffs, setSelectedInhalerPuffs] = useState('200');
     const [numInhalers, setNumInhalers] = useState('1');
-    const [puffsPerUse, setPuffsPerUse] = useState('');
-    const [usesPerDay, setUsesPerDay] = useState('');
+    const [puffsPerUse, setPuffsPerUse] = useState('2');
+    const [usesPerDay, setUsesPerDay] = useState('2');
+    const [showMath, setShowMath] = useState(false);
 
     const handleInhalerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedInhalerPuffs(e.target.value);
     };
 
-    useMemo(() => {
+    const calculated = useMemo(() => {
         const puffsPerInhaler = parseInt(selectedInhalerPuffs, 10);
         const totalInhalers = parseInt(numInhalers, 10);
         const puffsDose = parseInt(puffsPerUse, 10);
@@ -85,30 +151,89 @@ const InhalerCalculator: React.FC<{ setResult: (res: number | null) => void }> =
         if (puffsPerInhaler > 0 && totalInhalers > 0 && puffsDose > 0 && usesDay > 0) {
             const totalPuffs = puffsPerInhaler * totalInhalers;
             const puffsPerDay = puffsDose * usesDay;
-            setResult(Math.floor(totalPuffs / puffsPerDay));
-        } else {
-            setResult(null);
+            const days = Math.floor(totalPuffs / puffsPerDay);
+            setResult(days);
+            return { days, totalPuffs, puffsPerDay, puffsPerInhaler, totalInhalers, puffsDose, usesDay };
         }
+        setResult(null);
+        return null;
     }, [selectedInhalerPuffs, numInhalers, puffsPerUse, usesPerDay, setResult]);
 
     return (
         <div className="space-y-5 animate-fade-in">
-            <div>
-                <label htmlFor="inhaler-select" className="block text-sm font-semibold text-neutral-700 mb-2">Select Inhaler</label>
+            <SectionCard>
+                <SectionLabel helper="Pick a common inhaler or choose custom if the package has a different puff count.">1. Select inhaler</SectionLabel>
                 <select
                     id="inhaler-select"
                     onChange={handleInhalerChange}
                     value={selectedInhalerPuffs}
-                    className="w-full px-4 py-3 bg-white border border-neutral-300 rounded-xl shadow-sm focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all duration-200 text-neutral-900 hover:border-neutral-400"
+                    className={inputClass}
                 >
                     {COMMON_INHALERS.map(inhaler => (
                         <option key={inhaler.name} value={inhaler.puffs}>{inhaler.name} ({inhaler.puffs > 0 ? `${inhaler.puffs} puffs` : '...'})</option>
                     ))}
                 </select>
-            </div>
-            <CalculatorInput label="Number of Inhalers Dispensed" value={numInhalers} onChange={(e) => setNumInhalers(e.target.value)} />
-            <CalculatorInput label="Puffs per Use" value={puffsPerUse} onChange={(e) => setPuffsPerUse(e.target.value)} placeholder="e.g., 2" />
-            <CalculatorInput label="Uses per Day" value={usesPerDay} onChange={(e) => setUsesPerDay(e.target.value)} placeholder="e.g., 4" />
+                {parseInt(selectedInhalerPuffs, 10) > 0 && (
+                    <p className="mt-3 inline-flex rounded-xl bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-700">Auto-filled: {selectedInhalerPuffs} puffs per inhaler</p>
+                )}
+            </SectionCard>
+
+            <SectionCard>
+                <SectionLabel>2. What was dispensed?</SectionLabel>
+                <CalculatorInput label="Number of inhalers dispensed" value={numInhalers} onChange={(e) => setNumInhalers(e.target.value)} />
+            </SectionCard>
+
+            <SectionCard>
+                <SectionLabel helper="Use the directions from the SIG.">3. What does the prescription say?</SectionLabel>
+                <div className="grid grid-cols-2 gap-3">
+                    <CalculatorInput label="Puffs per use" value={puffsPerUse} onChange={(e) => setPuffsPerUse(e.target.value)} placeholder="e.g., 2" />
+                    <CalculatorInput label="Uses per day" value={usesPerDay} onChange={(e) => setUsesPerDay(e.target.value)} placeholder="e.g., 2" />
+                </div>
+                <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
+                    {[
+                        { label: '1 puff BID', puffs: '1', uses: '2' },
+                        { label: '2 puffs BID', puffs: '2', uses: '2' },
+                        { label: '1 puff daily', puffs: '1', uses: '1' },
+                        { label: '2 puffs q4-6h PRN', puffs: '2', uses: '4' },
+                    ].map(preset => (
+                        <button
+                            key={preset.label}
+                            onClick={() => {
+                                setPuffsPerUse(preset.puffs);
+                                setUsesPerDay(preset.uses);
+                            }}
+                            className="min-w-max rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 transition active:scale-[0.99]"
+                        >
+                            {preset.label}
+                        </button>
+                    ))}
+                </div>
+            </SectionCard>
+
+            <SectionCard className="border-sky-100 bg-sky-50">
+                <p className="text-sm font-semibold text-slate-600">Days supply</p>
+                {calculated ? (
+                    <>
+                        <p className="mt-1 text-4xl font-bold text-sky-700">{calculated.days} days</p>
+                        <div className="mt-3 grid gap-1 text-sm text-slate-600">
+                            <p>Total puffs: <span className="font-semibold text-slate-950">{calculated.totalPuffs}</span></p>
+                            <p>Puffs per day: <span className="font-semibold text-slate-950">{calculated.puffsPerDay}</span></p>
+                        </div>
+                        <button onClick={() => setShowMath(current => !current)} className="mt-4 text-sm font-semibold text-indigo-700">
+                            {showMath ? 'Hide math' : 'How we calculated it'}
+                        </button>
+                        {showMath && (
+                            <div className="mt-3 rounded-2xl bg-white/80 p-3 text-sm leading-6 text-slate-700">
+                                <p>{calculated.totalInhalers} inhaler(s) x {calculated.puffsPerInhaler} puffs = {calculated.totalPuffs} total puffs</p>
+                                <p>{calculated.puffsDose} puff(s) x {calculated.usesDay} time(s) daily = {calculated.puffsPerDay} puffs/day</p>
+                                <p>{calculated.totalPuffs} total puffs ÷ {calculated.puffsPerDay} puffs/day = {calculated.days} days</p>
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <p className="mt-1 text-lg font-semibold text-slate-900">Complete the fields above to calculate.</p>
+                )}
+            </SectionCard>
         </div>
     );
 };
@@ -342,7 +467,7 @@ const InjectableCalculator: React.FC<{ setResult: (res: number | null) => void }
                 id="injectable-product"
                 value={selectedProductId}
                 onChange={event => selectProduct(event.target.value)}
-                className="mt-3 w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 text-neutral-900 shadow-sm"
+                    className={inputClass}
             >
                 {products.map(product => (
                     <option key={product.id} value={product.id}>{product.label}</option>
@@ -369,7 +494,7 @@ const InjectableCalculator: React.FC<{ setResult: (res: number | null) => void }
                                 <button
                                     key={unit}
                                     onClick={() => setDoseUnit(unit)}
-                                    className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${doseUnit === unit ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20' : 'text-neutral-600'}`}
+                                    className={`h-12 rounded-xl px-4 text-sm font-semibold transition ${doseUnit === unit ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20' : 'text-neutral-600'}`}
                                 >
                                     {unit}
                                 </button>
@@ -424,14 +549,14 @@ const InjectableCalculator: React.FC<{ setResult: (res: number | null) => void }
                         onChange={event => setDose(event.target.value)}
                         placeholder={doseUnit === 'units' ? 'e.g., 10' : 'e.g., 1'}
                         min="0"
-                        className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 text-neutral-900 shadow-sm"
+                        className={inputClass}
                     />
                 </div>
                 {!isSlidingScale && (
                     <select
                         value={doseUnit}
                         onChange={event => setDoseUnit(event.target.value as InjectableDoseUnit)}
-                        className="w-28 rounded-xl border border-neutral-300 bg-white px-3 py-3 text-neutral-900 shadow-sm"
+                        className="h-14 w-28 rounded-2xl border border-slate-200 bg-white px-3 text-slate-950 shadow-sm"
                     >
                         <option value="units">units</option>
                         <option value="mL">mL</option>
@@ -632,19 +757,18 @@ const DaysSupplyCalculator: React.FC<DaysSupplyCalculatorProps> = ({ setView, in
 
   if (calculatorType === CalculatorType.Injectable) {
     return (
-      <div className="mx-auto w-full max-w-md px-5 py-5">
+      <AppPage>
         <InjectableCalculator setResult={setResult} />
-      </div>
+      </AppPage>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="bg-white p-8 sm:p-10 rounded-2xl shadow-sm border border-neutral-200">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-neutral-900 mb-2">{allowTypeSwitch ? 'Days Supply Calculator' : content.title}</h2>
-          <p className="text-neutral-600">{allowTypeSwitch ? 'Calculate the duration for different types of prescriptions with precision.' : content.description}</p>
-        </div>
+    <AppPage>
+      <PageHeader
+        title={allowTypeSwitch ? 'Days Supply Calculator' : content.title}
+        subtitle={allowTypeSwitch ? 'Calculate the duration for different types of prescriptions with precision.' : content.description}
+      />
 
         {allowTypeSwitch && <div className="flex gap-2 bg-neutral-100 p-2 rounded-2xl mb-8">
             <SegmentedControlButton label={CalculatorType.Oral} current={calculatorType} setType={handleSetType} />
@@ -652,29 +776,11 @@ const DaysSupplyCalculator: React.FC<DaysSupplyCalculatorProps> = ({ setView, in
             <SegmentedControlButton label={CalculatorType.Injectable} current={calculatorType} setType={handleSetType} />
         </div>}
 
-        <div className="space-y-6">
+        <div className="space-y-5">
             {renderCalculator()}
         </div>
 
-        {calculatorType !== CalculatorType.Injectable && result !== null && result > 0 && (
-            <div className="mt-8 p-8 bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-2xl animate-fade-in shadow-sm">
-                <div className="flex items-center gap-3 mb-3">
-                    <div className="h-10 w-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                        </svg>
-                    </div>
-                    <h3 className="text-lg font-semibold text-emerald-900">Calculated Days Supply</h3>
-                </div>
-                <div className="flex items-baseline gap-2">
-                    <p className="text-5xl font-bold text-emerald-700">{result}</p>
-                    <span className="text-2xl font-semibold text-emerald-600">days</span>
-                </div>
-                <p className="text-sm text-emerald-700 mt-3">Remember to verify this calculation with a licensed pharmacist.</p>
-            </div>
-        )}
-      </div>
-    </div>
+    </AppPage>
   );
 };
 

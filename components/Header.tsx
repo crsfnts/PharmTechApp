@@ -33,12 +33,12 @@ const Header: React.FC<HeaderProps> = ({ currentView, onBack, showBack, onOpenOn
 
   return (
     <header className="sticky top-0 z-50 border-b border-transparent bg-slate-50/95 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-md items-center justify-between px-5">
+      <div className="relative mx-auto flex h-16 max-w-md items-center justify-between px-5 md:max-w-2xl md:px-6">
         <div className="flex min-w-0 items-center gap-3">
           {showBack && !isDashboard && (
             <button
               onClick={onBack}
-              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+              className="absolute right-16 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white text-slate-500 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-100 hover:text-slate-900"
               aria-label="Go back"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">

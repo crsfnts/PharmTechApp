@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View } from '../types';
+import { AppPage, PageHeader } from './AppLayout';
 
 interface CalculatorHubProps {
   setView: (view: View) => void;
@@ -93,13 +94,11 @@ const CalculatorHub: React.FC<CalculatorHubProps> = ({ setView }) => {
   ));
 
   return (
-    <div className="mx-auto w-full max-w-md px-5 py-5">
-      <section className="mb-6">
-        <p className="text-3xl font-semibold tracking-normal text-slate-950">Calculators</p>
-        <p className="mt-2 max-w-sm text-base leading-7 text-slate-600">
-          Quick, accurate calculations for everyday pharmacy tasks.
-        </p>
-      </section>
+    <AppPage>
+      <PageHeader
+        title="Calculators"
+        subtitle="Quick, accurate calculations for everyday pharmacy tasks."
+      />
 
       <div className="-mx-5 mb-5 overflow-x-auto px-5">
         <div className="flex min-w-max gap-3">
@@ -148,7 +147,7 @@ const CalculatorHub: React.FC<CalculatorHubProps> = ({ setView }) => {
           Keep units consistent and verify final values with a licensed pharmacist.
         </p>
       </section>
-    </div>
+    </AppPage>
   );
 };
 

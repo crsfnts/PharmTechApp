@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View } from '../types';
+import { AppPage, PageHeader } from './AppLayout';
 
 interface EducationProps {
   setView: (view: View) => void;
@@ -393,13 +394,11 @@ const CEProviderCard: React.FC<(typeof ceProviders)[number]> = ({ name, descript
 
 const Education: React.FC<EducationProps> = ({ setView }) => {
   return (
-    <div className="mx-auto w-full max-w-md px-5 py-5 md:max-w-2xl">
-      <section className="mb-6">
-        <p className="text-3xl font-semibold tracking-normal text-slate-950">Education</p>
-        <p className="mt-2 text-base leading-7 text-slate-600">
-          Learn pharmacy faster, one small lesson at a time.
-        </p>
-      </section>
+    <AppPage>
+      <PageHeader
+        title="Education"
+        subtitle="Learn pharmacy faster, one small lesson at a time."
+      />
 
       <QuickFlashcardCard onStart={() => setView(View.FlashCards)} />
 
@@ -444,7 +443,7 @@ const Education: React.FC<EducationProps> = ({ setView }) => {
           rxmate links to trusted CE resources only. Always verify that a course meets your renewal requirements before completing it.
         </p>
       </section>
-    </div>
+    </AppPage>
   );
 };
 

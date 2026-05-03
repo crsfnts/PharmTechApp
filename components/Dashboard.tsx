@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { View } from '../types';
 import { TOP_DRUGS_LIST } from '../constants';
+import { AppPage } from './AppLayout';
 
 interface DashboardProps {
   setView: (view: View) => void;
@@ -40,7 +41,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setView }) => {
   }, [lookupQuery]);
 
   return (
-    <div className="mx-auto w-full max-w-md px-5 py-5">
+    <AppPage>
       <section className="mb-5">
         <p className="text-2xl font-semibold tracking-normal text-slate-950">
           Good morning
@@ -118,7 +119,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setView }) => {
       <p className="mt-7 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-xs leading-5 text-slate-500">
         Calculations and drug information should be verified by a licensed pharmacist before use.
       </p>
-    </div>
+    </AppPage>
   );
 };
 
