@@ -1,63 +1,155 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from '../types';
 
-interface HospitalCalculationsProps {
+interface CalculatorHubProps {
   setView: (view: View) => void;
 }
 
-const HospitalCalculations: React.FC<HospitalCalculationsProps> = ({ setView }) => {
-  const features = [
-    {
-      title: 'IV FLOW RATE',
-      description: 'Calculate IV infusion rates and drop rates.',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-        </svg>
-      ),
-      view: View.IVFlowRate,
-    },
-    {
-      title: 'ALLIGATION',
-      description: 'Calculate mixture ratios using the tic-tac-toe method.',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 4.996 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z" />
-        </svg>
-      ),
-      view: View.Alligation,
-    },
-  ];
+type CalculatorCategory = 'All' | 'Dosing' | 'IV' | 'Compounding';
+
+type CalculatorItem = {
+  title: string;
+  description: string;
+  category: Exclude<CalculatorCategory, 'All'>;
+  view: View;
+  tone: string;
+  icon: React.ReactNode;
+};
+
+const CalculatorIcon = ({ className = 'h-7 w-7' }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3.75h10.5A2.25 2.25 0 0 1 19.5 6v12a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 18V6a2.25 2.25 0 0 1 2.25-2.25Zm2.25 4.5h6m-6 4.5h.01m3 0h.01m3 0h.01m-6 3h.01m3 0h.01m3 0h.01" />
+  </svg>
+);
+
+const SyringeIcon = ({ className = 'h-7 w-7' }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" d="m18.75 4.5.75-.75m-3 3 3-3 1.5 1.5-3 3m-1.5-1.5L6.75 16.5l-1.5 3.75L9 18.75 19.5 8.25l-3-3Zm-6 6 3 3m-5.25 2.25 3 3" />
+  </svg>
+);
+
+const BeakerIcon = ({ className = 'h-7 w-7' }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.75h4.5M10.5 3.75v5.1l-5.25 8.4A2.25 2.25 0 0 0 7.16 20.25h9.68a2.25 2.25 0 0 0 1.91-3l-5.25-8.4v-5.1M8.25 14.25h7.5" />
+  </svg>
+);
+
+const PillIcon = ({ className = 'h-7 w-7' }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21a6 6 0 0 1-4.24-10.24l4.5-4.5a6 6 0 1 1 8.48 8.48l-4.5 4.5A5.98 5.98 0 0 1 10.5 21Zm-1.24-11.24 4.98 4.98" />
+  </svg>
+);
+
+const calculators: CalculatorItem[] = [
+  {
+    title: 'Oral Days Supply',
+    description: 'Tablets, capsules, and standard directions',
+    category: 'Dosing',
+    view: View.DaysSupplyOral,
+    tone: 'bg-indigo-50 text-indigo-600',
+    icon: <CalculatorIcon />,
+  },
+  {
+    title: 'Inhaler Days Supply',
+    description: 'Puffs per use, daily use, and inhaler count',
+    category: 'Dosing',
+    view: View.DaysSupplyInhaler,
+    tone: 'bg-sky-50 text-sky-600',
+    icon: <PillIcon />,
+  },
+  {
+    title: 'Injectable Days Supply',
+    description: 'Vials, pens, syringes, dose, and frequency',
+    category: 'Dosing',
+    view: View.DaysSupplyInjectable,
+    tone: 'bg-emerald-50 text-emerald-600',
+    icon: <SyringeIcon />,
+  },
+  {
+    title: 'IV Flow Rate',
+    description: 'Calculate mL/hr for IV infusions',
+    category: 'IV',
+    view: View.IVFlowRate,
+    tone: 'bg-violet-50 text-violet-600',
+    icon: <SyringeIcon />,
+  },
+  {
+    title: 'Alligation',
+    description: 'Mixing ratios for compounding',
+    category: 'Compounding',
+    view: View.Alligation,
+    tone: 'bg-amber-50 text-amber-600',
+    icon: <BeakerIcon />,
+  },
+];
+
+const categories: CalculatorCategory[] = ['All', 'Dosing', 'IV', 'Compounding'];
+
+const CalculatorHub: React.FC<CalculatorHubProps> = ({ setView }) => {
+  const [activeCategory, setActiveCategory] = useState<CalculatorCategory>('All');
+
+  const visibleCalculators = calculators.filter(item => (
+    activeCategory === 'All' || item.category === activeCategory
+  ));
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-slate-800 mb-2">Hospital Calculations</h1>
-        <p className="text-slate-600">Select a calculator to get started</p>
+    <div className="mx-auto w-full max-w-md px-5 py-5">
+      <section className="mb-6">
+        <p className="text-3xl font-semibold tracking-normal text-slate-950">Calculators</p>
+        <p className="mt-2 max-w-sm text-base leading-7 text-slate-600">
+          Quick, accurate calculations for everyday pharmacy tasks.
+        </p>
+      </section>
+
+      <div className="-mx-5 mb-5 overflow-x-auto px-5">
+        <div className="flex min-w-max gap-3">
+          {categories.map(category => {
+            const active = category === activeCategory;
+            return (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={[
+                  'rounded-xl px-4 py-2 text-sm font-semibold transition',
+                  active ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/25' : 'bg-transparent text-slate-500',
+                ].join(' ')}
+              >
+                {category}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {features.map((feature) => (
+      <section className="space-y-4">
+        {visibleCalculators.map(calculator => (
           <button
-            key={feature.title}
-            onClick={() => setView(feature.view)}
-            className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 text-left"
+            key={calculator.title}
+            onClick={() => setView(calculator.view)}
+            className="flex w-full items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm transition active:scale-[0.99]"
           >
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0 bg-teal-100 p-3 rounded-lg text-teal-600">
-                {feature.icon}
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-slate-800">{feature.title}</h3>
-                <p className="mt-1 text-sm text-slate-600">{feature.description}</p>
-              </div>
-            </div>
+            <span className={`inline-flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-2xl ${calculator.tone}`}>
+              {calculator.icon}
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-base font-semibold text-slate-950">{calculator.title}</span>
+              <span className="mt-1 block text-sm leading-6 text-slate-500">{calculator.description}</span>
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0 text-slate-400" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m9 18 6-6-6-6" />
+            </svg>
           </button>
         ))}
-      </div>
+      </section>
+
+      <section className="mt-6 rounded-2xl border border-indigo-100 bg-indigo-50/70 p-5">
+        <p className="text-sm font-semibold text-indigo-700">Tip</p>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          Keep units consistent and verify final values with a licensed pharmacist.
+        </p>
+      </section>
     </div>
   );
 };
 
-export default HospitalCalculations;
+export default CalculatorHub;
