@@ -13,6 +13,7 @@ const AlligationCalculator: React.FC<AlligationCalculatorProps> = () => {
   const [totalQuantity, setTotalQuantity] = useState('');
   const [result, setResult] = useState<{ higher: number; lower: number } | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [showMath, setShowMath] = useState(false);
 
   const calculate = () => {
     if (!desiredStrength || !higherStrength || !lowerStrength || !totalQuantity) return;
@@ -40,6 +41,7 @@ const AlligationCalculator: React.FC<AlligationCalculatorProps> = () => {
       higher: parseFloat(higherQuantity.toFixed(2)),
       lower: parseFloat(lowerQuantity.toFixed(2))
     });
+    setShowMath(false);
   };
 
   const resetForm = () => {
@@ -49,6 +51,7 @@ const AlligationCalculator: React.FC<AlligationCalculatorProps> = () => {
     setTotalQuantity('');
     setResult(null);
     setShowExplanation(false);
+    setShowMath(false);
   };
 
   const toggleExplanation = () => {
@@ -195,6 +198,16 @@ Total parts = 8 (3 + 5)
             <p className="mt-3 text-sm text-slate-600">
               Total: <span className="font-medium">{(result.higher + result.lower).toFixed(2)} mL</span> (should match your desired total quantity)
             </p>
+            <button onClick={() => setShowMath(current => !current)} className="mt-4 text-sm font-semibold text-indigo-700">
+              {showMath ? 'Hide math' : 'How we calculated it'}
+            </button>
+            {showMath && (
+              <div className="mt-3 rounded-2xl bg-white/80 p-3 text-sm leading-6 text-slate-700">
+                <p>Higher part: {desiredStrength}% - {lowerStrength}% = {Math.abs(parseFloat(desiredStrength) - parseFloat(lowerStrength)).toFixed(2)} parts</p>
+                <p>Lower part: {higherStrength}% - {desiredStrength}% = {Math.abs(parseFloat(higherStrength) - parseFloat(desiredStrength)).toFixed(2)} parts</p>
+                <p>Apply those parts to {totalQuantity} mL total = {result.higher} mL higher strength and {result.lower} mL lower strength.</p>
+              </div>
+            )}
           </SectionCard>
         )}
     </AppPage>

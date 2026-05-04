@@ -301,7 +301,7 @@ const QuickFlashcardCard: React.FC<{ onStart: () => void }> = ({ onStart }) => {
           )}
         </div>
 
-        <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
+        <div className="mt-4 grid gap-3">
           <button
             onClick={onStart}
             className="min-h-12 rounded-2xl bg-white px-5 py-3 text-sm font-bold text-indigo-700 shadow-sm transition hover:bg-indigo-50"
@@ -310,7 +310,7 @@ const QuickFlashcardCard: React.FC<{ onStart: () => void }> = ({ onStart }) => {
           </button>
           <button
             onClick={onStart}
-            className="min-h-12 rounded-2xl px-3 py-3 text-sm font-semibold text-white underline decoration-white/40 underline-offset-4 sm:text-right"
+            className="min-h-12 rounded-2xl px-3 py-3 text-sm font-semibold text-white underline decoration-white/40 underline-offset-4"
           >
             Open full flashcard trainer
           </button>
@@ -338,13 +338,16 @@ const TodayStudyCard: React.FC<NavItem & { onClick: (view: View) => void }> = ({
 const LearningTopicCard: React.FC<NavItem & { onClick: (view: View) => void }> = ({ title, description, view, icon, onClick }) => (
   <button
     onClick={() => onClick(view)}
-    className="rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:border-indigo-200 hover:bg-indigo-50/40"
+    className="flex min-h-20 w-full items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:border-indigo-200 hover:bg-indigo-50/40"
   >
-    <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
+    <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
       <ToolIcon icon={icon} />
     </span>
-    <span className="mt-3 block text-base font-semibold text-slate-950">{title}</span>
-    <span className="mt-1 block text-sm leading-6 text-slate-500">{description}</span>
+    <span className="min-w-0 flex-1">
+      <span className="block text-sm font-semibold text-slate-950">{title}</span>
+      <span className="mt-1 block text-sm leading-5 text-slate-500">{description}</span>
+    </span>
+    <ChevronIcon />
   </button>
 );
 
@@ -364,18 +367,11 @@ const ReferenceCard: React.FC<NavItem & { onClick: (view: View) => void }> = ({ 
   </button>
 );
 
-const CEProviderCard: React.FC<(typeof ceProviders)[number]> = ({ name, description, url, category, trusted }) => (
+const CEProviderCard: React.FC<(typeof ceProviders)[number]> = ({ name, description, url, category }) => (
   <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
     <div className="flex items-start justify-between gap-3">
       <div className="min-w-0">
-        <div className="flex flex-wrap items-center gap-2">
-          <h3 className="text-base font-semibold leading-6 text-slate-950">{name}</h3>
-          {trusted && (
-            <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
-              Trusted
-            </span>
-          )}
-        </div>
+        <h3 className="text-base font-semibold leading-6 text-slate-950">{name}</h3>
         <p className="mt-2 text-sm leading-6 text-slate-500">{description}</p>
       </div>
       <span className="shrink-0 rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-700">
@@ -384,7 +380,7 @@ const CEProviderCard: React.FC<(typeof ceProviders)[number]> = ({ name, descript
     </div>
     <button
       onClick={() => window.open(url, '_blank', 'noopener,noreferrer')}
-      className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-indigo-500/20 transition hover:bg-indigo-700 sm:w-auto"
+      className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-indigo-500/20 transition hover:bg-indigo-700"
     >
       Open provider
       <ToolIcon icon="external" />
@@ -403,7 +399,10 @@ const Education: React.FC<EducationProps> = ({ setView }) => {
       <QuickFlashcardCard onStart={() => setView(View.FlashCards)} />
 
       <section className="mt-8">
-        <SectionHeader title="Today's Study" />
+        <SectionHeader
+          title="Today's Study"
+          subtitle="Small practice sessions you can finish anytime."
+        />
         <div className="-mx-5 flex gap-3 overflow-x-auto px-5 pb-1 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
           {todayStudyItems.map(item => (
             <TodayStudyCard key={item.title} {...item} onClick={setView} />
@@ -412,8 +411,11 @@ const Education: React.FC<EducationProps> = ({ setView }) => {
       </section>
 
       <section className="mt-8">
-        <SectionHeader title="Learn by Topic" />
-        <div className="grid gap-3 sm:grid-cols-2">
+        <SectionHeader
+          title="Learn by Topic"
+          subtitle="Build confidence one topic at a time."
+        />
+        <div className="space-y-3">
           {learningTopics.map(topic => (
             <LearningTopicCard key={topic.title} {...topic} onClick={setView} />
           ))}
@@ -421,7 +423,10 @@ const Education: React.FC<EducationProps> = ({ setView }) => {
       </section>
 
       <section className="mt-8">
-        <SectionHeader title="Reference at work" />
+        <SectionHeader
+          title="Reference at Work"
+          subtitle="Quick help for common pharmacy situations."
+        />
         <div className="space-y-3">
           {referenceItems.map(item => (
             <ReferenceCard key={item.title} {...item} onClick={setView} />

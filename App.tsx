@@ -89,6 +89,8 @@ const App: React.FC = () => {
 
   const closeOnboarding = useCallback(() => {
     window.localStorage.setItem(ONBOARDING_STORAGE_KEY, 'true');
+    setCurrentView(View.Dashboard);
+    setViewHistory([]);
     setShowOnboarding(false);
   }, []);
 
@@ -148,56 +150,60 @@ const App: React.FC = () => {
   return (
     <ThemeProvider view={currentView}>
       <AppShell>
-        <Header
-          currentView={currentView}
-          onBack={goBack}
-          showBack={currentView !== View.Dashboard}
-          onOpenOnboarding={openOnboarding}
-        />
+        {showOnboarding ? (
+          <Onboarding onClose={closeOnboarding} />
+        ) : (
+          <>
+            <Header
+              currentView={currentView}
+              onBack={goBack}
+              showBack={currentView !== View.Dashboard}
+              onOpenOnboarding={openOnboarding}
+            />
 
-        {/* Main content with view transition */}
-        <main className="w-full flex-1 overflow-x-hidden">
-          <div key={currentView} className="animate-fade-in">
-            {renderView()}
-          </div>
-        </main>
+            {/* Main content with view transition */}
+            <main className="w-full flex-1 overflow-x-hidden">
+              <div key={currentView} className="animate-fade-in">
+                {renderView()}
+              </div>
+            </main>
 
-        <footer className="mt-8 hidden border-t border-slate-200 bg-white">
-          <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-            <p>RxMate Professional Edition</p>
-            <p>Verify all information with a licensed pharmacist.</p>
-          </div>
-        </footer>
+            <footer className="mt-8 hidden border-t border-slate-200 bg-white">
+              <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+                <p>RxMate Professional Edition</p>
+                <p>Verify all information with a licensed pharmacist.</p>
+              </div>
+            </footer>
 
-        <nav className="fixed bottom-0 left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 border-t border-slate-200 bg-white/95 px-5 pb-[max(0.85rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-12px_30px_rgba(15,23,42,0.08)] backdrop-blur md:bottom-6 md:rounded-b-[34px]">
-          <div className="mx-auto grid w-full grid-cols-5 items-end">
-            <button onClick={() => setCurrentView(View.Dashboard)} className={navButtonClass(isActive([View.Dashboard]))}>
-              <BottomNavIcon type="home" />
-              Home
-            </button>
-            <button onClick={() => setView(View.PillIdentifier)} className={navButtonClass(isActive([View.PillIdentifier]))}>
-              <BottomNavIcon type="pill" />
-              Pill ID
-            </button>
-            <button
-              onClick={() => setView(View.Glossary)}
-              className="mx-auto -mt-8 flex h-16 w-16 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg shadow-indigo-500/30"
-              aria-label="Open drug lookup"
-            >
-              <BottomNavIcon type="lookup" />
-            </button>
-            <button onClick={() => setView(View.HospitalCalculations)} className={navButtonClass(isActive([View.DaysSupplyCalc, View.DaysSupplyOral, View.DaysSupplyInhaler, View.DaysSupplyInjectable, View.HospitalCalculations, View.IVFlowRate, View.Alligation]))}>
-              <BottomNavIcon type="tools" />
-              Calc
-            </button>
-            <button onClick={() => setView(View.Education)} className={navButtonClass(isActive([View.Education, View.FlashCards, View.SigGlossary, View.BillingInsurance, View.PriorAuthHelper, View.InjectionGuide]))}>
-              <BottomNavIcon type="study" />
-              Study
-            </button>
-          </div>
-        </nav>
-
-        {showOnboarding && <Onboarding onClose={closeOnboarding} />}
+            <nav className="fixed bottom-0 left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 border-t border-slate-200 bg-white/95 px-5 pb-[max(0.85rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-12px_30px_rgba(15,23,42,0.08)] backdrop-blur md:bottom-6 md:rounded-b-[34px]">
+              <div className="mx-auto grid w-full grid-cols-5 items-end">
+                <button onClick={() => setCurrentView(View.Dashboard)} className={navButtonClass(isActive([View.Dashboard]))}>
+                  <BottomNavIcon type="home" />
+                  Home
+                </button>
+                <button onClick={() => setView(View.PillIdentifier)} className={navButtonClass(isActive([View.PillIdentifier]))}>
+                  <BottomNavIcon type="pill" />
+                  Pill ID
+                </button>
+                <button
+                  onClick={() => setView(View.Glossary)}
+                  className="mx-auto -mt-8 flex h-16 w-16 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg shadow-indigo-500/30"
+                  aria-label="Open drug lookup"
+                >
+                  <BottomNavIcon type="lookup" />
+                </button>
+                <button onClick={() => setView(View.HospitalCalculations)} className={navButtonClass(isActive([View.DaysSupplyCalc, View.DaysSupplyOral, View.DaysSupplyInhaler, View.DaysSupplyInjectable, View.HospitalCalculations, View.IVFlowRate, View.Alligation]))}>
+                  <BottomNavIcon type="tools" />
+                  Calc
+                </button>
+                <button onClick={() => setView(View.Education)} className={navButtonClass(isActive([View.Education, View.FlashCards, View.SigGlossary, View.BillingInsurance, View.PriorAuthHelper, View.InjectionGuide]))}>
+                  <BottomNavIcon type="study" />
+                  Study
+                </button>
+              </div>
+            </nav>
+          </>
+        )}
       </AppShell>
     </ThemeProvider>
   );

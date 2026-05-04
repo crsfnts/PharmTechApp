@@ -9,7 +9,7 @@ interface HeaderProps {
 }
 
 const viewTitles: Record<View, string> = {
-  [View.Dashboard]: 'Workbench',
+  [View.Dashboard]: 'Home',
   [View.Glossary]: 'Drug Lookup',
   [View.SigGlossary]: 'SIG Code Trainer',
   [View.DaysSupplyCalc]: 'Days Supply Calculator',

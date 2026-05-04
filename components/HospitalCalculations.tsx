@@ -68,7 +68,7 @@ const calculators: CalculatorItem[] = [
   },
   {
     title: 'IV Flow Rate',
-    description: 'Calculate mL/hr for IV infusions',
+    description: 'mL/hr, gtt/min, and time calculations',
     category: 'IV',
     view: View.IVFlowRate,
     tone: 'bg-violet-50 text-violet-600',
@@ -101,7 +101,7 @@ const CalculatorHub: React.FC<CalculatorHubProps> = ({ setView }) => {
       />
 
       <div className="-mx-5 mb-5 overflow-x-auto px-5">
-        <div className="flex min-w-max gap-3">
+        <div className="flex min-w-max gap-2">
           {categories.map(category => {
             const active = category === activeCategory;
             return (
@@ -110,7 +110,7 @@ const CalculatorHub: React.FC<CalculatorHubProps> = ({ setView }) => {
                 onClick={() => setActiveCategory(category)}
                 className={[
                   'rounded-xl px-4 py-2 text-sm font-semibold transition',
-                  active ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/25' : 'bg-transparent text-slate-500',
+                  active ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/25' : 'bg-slate-50 text-slate-500',
                 ].join(' ')}
               >
                 {category}
@@ -120,19 +120,19 @@ const CalculatorHub: React.FC<CalculatorHubProps> = ({ setView }) => {
         </div>
       </div>
 
-      <section className="space-y-4">
+      <section className="space-y-3">
         {visibleCalculators.map(calculator => (
           <button
             key={calculator.title}
             onClick={() => setView(calculator.view)}
-            className="flex w-full items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm transition active:scale-[0.99]"
+            className="flex w-full items-center gap-4 rounded-3xl border border-slate-200 bg-white p-3.5 text-left shadow-sm transition active:scale-[0.99]"
           >
-            <span className={`inline-flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-2xl ${calculator.tone}`}>
+            <span className={`inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${calculator.tone}`}>
               {calculator.icon}
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-base font-semibold text-slate-950">{calculator.title}</span>
-              <span className="mt-1 block text-sm leading-6 text-slate-500">{calculator.description}</span>
+              <span className="block text-sm font-bold text-slate-950">{calculator.title}</span>
+              <span className="mt-1 block text-xs leading-5 text-slate-500">{calculator.description}</span>
             </span>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0 text-slate-400" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="m9 18 6-6-6-6" />

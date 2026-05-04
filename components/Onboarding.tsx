@@ -38,17 +38,17 @@ const onboardingSteps: OnboardingStep[] = [
     headline: 'Learn and grow your career.',
     body: 'Flashcards, practice questions, quick lessons, and trusted references anytime, anywhere.',
     visual: 'learning',
-    featureChips: ['Flashcards', 'Lessons', 'Clinical References'],
+    featureChips: ['Flashcards', 'Lessons', 'References'],
   },
   {
     headline: 'Reliable and trustworthy.',
-    body: 'Accurate information you can count on, so you can work with confidence.',
+    body: 'Clear tools and references to help you work with confidence.',
     visual: 'trust',
-    featureChips: ['Trusted Content', 'Built for Accuracy', 'Your Data is Safe'],
+    featureChips: ['Trusted Content', 'Built for Accuracy', 'Data stays local'],
   },
   {
     title: 'rxmate',
-    headline: "Let's get started!",
+    headline: 'Let’s get started!',
     body: 'Everything you need to work smarter, learn more, and feel confident.',
     visual: 'start',
   },
@@ -190,7 +190,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
   onPrimary,
   onSkip,
 }) => (
-  <section className="flex min-h-[100svh] flex-col px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
+  <section className="flex min-h-full flex-col px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
     <div className="mx-auto flex w-full max-w-md items-center justify-between">
       <div className="h-11">
         {title && <p className="text-3xl font-bold tracking-normal text-indigo-600">{title}</p>}
@@ -269,7 +269,7 @@ const OnboardingCarousel: React.FC<OnboardingProps> = ({ onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-[100] overflow-hidden bg-white"
+      className="absolute inset-0 z-[100] overflow-hidden bg-white md:rounded-[34px]"
       role="dialog"
       aria-modal="true"
       aria-labelledby="onboarding-title"

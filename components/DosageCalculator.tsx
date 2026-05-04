@@ -38,6 +38,7 @@ const OralCalculator: React.FC<{ setResult: (res: number | null) => void }> = ({
     const [totalQuantity, setTotalQuantity] = useState('60');
     const [doseAmount, setDoseAmount] = useState('1');
     const [dosesPerDay, setDosesPerDay] = useState('2');
+    const [unit, setUnit] = useState('tablets');
     const [showMath, setShowMath] = useState(false);
 
     const calculated = useMemo(() => {
@@ -66,12 +67,23 @@ const OralCalculator: React.FC<{ setResult: (res: number | null) => void }> = ({
         <div className="space-y-4 animate-fade-in">
             <SectionCard>
                 <SectionLabel helper="Use the total quantity from the fill label or prescription.">1. What was dispensed?</SectionLabel>
-                <CalculatorInput
-                    label="Quantity dispensed"
-                    value={totalQuantity}
-                    onChange={(e) => setTotalQuantity(e.target.value)}
-                    placeholder="e.g., 60"
-                />
+                <div className="grid grid-cols-[1fr_7rem] gap-3">
+                    <CalculatorInput
+                        label="Quantity dispensed"
+                        value={totalQuantity}
+                        onChange={(e) => setTotalQuantity(e.target.value)}
+                        placeholder="e.g., 60"
+                    />
+                    <div>
+                        <label className="block text-sm font-semibold text-neutral-700 mb-2">Unit</label>
+                        <select value={unit} onChange={event => setUnit(event.target.value)} className={inputClass}>
+                            <option value="tablets">tablets</option>
+                            <option value="capsules">capsules</option>
+                            <option value="mL">mL</option>
+                            <option value="patches">patches</option>
+                        </select>
+                    </div>
+                </div>
             </SectionCard>
 
             <SectionCard>
@@ -83,14 +95,17 @@ const OralCalculator: React.FC<{ setResult: (res: number | null) => void }> = ({
                         onChange={(e) => setDoseAmount(e.target.value)}
                         placeholder="1"
                     />
-                    <CalculatorInput
-                        label="Times per day"
-                        value={dosesPerDay}
-                        onChange={(e) => setDosesPerDay(e.target.value)}
-                        placeholder="2"
-                    />
+                    <div>
+                        <label className="block text-sm font-semibold text-neutral-700 mb-2">Frequency</label>
+                        <select value={dosesPerDay} onChange={(e) => setDosesPerDay(e.target.value)} className={inputClass}>
+                            <option value="1">Once daily</option>
+                            <option value="2">Twice daily (BID)</option>
+                            <option value="3">Three times daily (TID)</option>
+                            <option value="4">Four times daily (QID)</option>
+                        </select>
+                    </div>
                 </div>
-                <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
+                <div className="mt-4 flex flex-wrap gap-2">
                     {presets.map(preset => (
                         <button
                             key={preset.label}
@@ -98,7 +113,7 @@ const OralCalculator: React.FC<{ setResult: (res: number | null) => void }> = ({
                                 setDoseAmount(preset.dose);
                                 setDosesPerDay(preset.times);
                             }}
-                            className="min-w-max rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 transition active:scale-[0.99]"
+                            className={`rounded-xl border px-3 py-2 text-sm font-semibold transition active:scale-[0.99] ${doseAmount === preset.dose && dosesPerDay === preset.times ? 'border-indigo-300 bg-indigo-600 text-white shadow-md shadow-indigo-500/20' : 'border-slate-200 bg-white text-slate-600'}`}
                         >
                             {preset.label}
                         </button>
@@ -111,14 +126,17 @@ const OralCalculator: React.FC<{ setResult: (res: number | null) => void }> = ({
                 {calculated ? (
                     <>
                         <p className="mt-1 text-4xl font-bold text-emerald-700">{calculated.days} days</p>
-                        <p className="mt-3 text-sm text-slate-600">Quantity per day: <span className="font-semibold text-slate-950">{calculated.perDay} tablets</span></p>
+                        <div className="mt-3 grid gap-1 text-sm text-slate-600">
+                            <p>Quantity per day: <span className="font-semibold text-slate-950">{calculated.perDay} {unit}</span></p>
+                            <p>Quantity dispensed: <span className="font-semibold text-slate-950">{calculated.total} {unit}</span></p>
+                        </div>
                         <button onClick={() => setShowMath(current => !current)} className="mt-4 text-sm font-semibold text-indigo-700">
                             {showMath ? 'Hide math' : 'How we calculated it'}
                         </button>
                         {showMath && (
                             <div className="mt-3 rounded-2xl bg-white/80 p-3 text-sm leading-6 text-slate-700">
-                                <p>{calculated.dose} tablet(s) x {calculated.times} time(s) daily = {calculated.perDay} tablet(s)/day</p>
-                                <p>{calculated.total} tablet(s) dispensed ÷ {calculated.perDay} tablet(s)/day = {calculated.days} days</p>
+                                <p>{calculated.dose} {unit} x {calculated.times} time(s) daily = {calculated.perDay} {unit}/day</p>
+                                <p>{calculated.total} {unit} dispensed ÷ {calculated.perDay} {unit}/day = {calculated.days} days</p>
                             </div>
                         )}
                     </>
@@ -133,17 +151,20 @@ const OralCalculator: React.FC<{ setResult: (res: number | null) => void }> = ({
 // --- Inhaler Calculator ---
 const InhalerCalculator: React.FC<{ setResult: (res: number | null) => void }> = ({ setResult }) => {
     const [selectedInhalerPuffs, setSelectedInhalerPuffs] = useState('200');
+    const [manualPuffsPerInhaler, setManualPuffsPerInhaler] = useState('');
     const [numInhalers, setNumInhalers] = useState('1');
     const [puffsPerUse, setPuffsPerUse] = useState('2');
     const [usesPerDay, setUsesPerDay] = useState('2');
     const [showMath, setShowMath] = useState(false);
+    const [prnSelected, setPrnSelected] = useState(false);
 
     const handleInhalerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedInhalerPuffs(e.target.value);
     };
 
     const calculated = useMemo(() => {
-        const puffsPerInhaler = parseInt(selectedInhalerPuffs, 10);
+        const selectedPuffs = parseInt(selectedInhalerPuffs, 10);
+        const puffsPerInhaler = selectedPuffs > 0 ? selectedPuffs : parseInt(manualPuffsPerInhaler, 10);
         const totalInhalers = parseInt(numInhalers, 10);
         const puffsDose = parseInt(puffsPerUse, 10);
         const usesDay = parseInt(usesPerDay, 10);
@@ -157,7 +178,15 @@ const InhalerCalculator: React.FC<{ setResult: (res: number | null) => void }> =
         }
         setResult(null);
         return null;
-    }, [selectedInhalerPuffs, numInhalers, puffsPerUse, usesPerDay, setResult]);
+    }, [manualPuffsPerInhaler, selectedInhalerPuffs, numInhalers, puffsPerUse, usesPerDay, setResult]);
+
+    const inhalerPresets = [
+        { label: '1 puff BID', puffs: '1', uses: '2', prn: false },
+        { label: '2 puffs BID', puffs: '2', uses: '2', prn: false },
+        { label: '1 puff daily', puffs: '1', uses: '1', prn: false },
+        { label: '2 puffs daily', puffs: '2', uses: '1', prn: false },
+        { label: 'q4-6h PRN', puffs: '2', uses: '4', prn: true },
+    ];
 
     return (
         <div className="space-y-5 animate-fade-in">
@@ -176,6 +205,11 @@ const InhalerCalculator: React.FC<{ setResult: (res: number | null) => void }> =
                 {parseInt(selectedInhalerPuffs, 10) > 0 && (
                     <p className="mt-3 inline-flex rounded-xl bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-700">Auto-filled: {selectedInhalerPuffs} puffs per inhaler</p>
                 )}
+                {parseInt(selectedInhalerPuffs, 10) === 0 && (
+                    <div className="mt-4">
+                        <CalculatorInput label="Puffs per inhaler" value={manualPuffsPerInhaler} onChange={(e) => setManualPuffsPerInhaler(e.target.value)} placeholder="e.g., 200" />
+                    </div>
+                )}
             </SectionCard>
 
             <SectionCard>
@@ -189,25 +223,26 @@ const InhalerCalculator: React.FC<{ setResult: (res: number | null) => void }> =
                     <CalculatorInput label="Puffs per use" value={puffsPerUse} onChange={(e) => setPuffsPerUse(e.target.value)} placeholder="e.g., 2" />
                     <CalculatorInput label="Uses per day" value={usesPerDay} onChange={(e) => setUsesPerDay(e.target.value)} placeholder="e.g., 2" />
                 </div>
-                <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
-                    {[
-                        { label: '1 puff BID', puffs: '1', uses: '2' },
-                        { label: '2 puffs BID', puffs: '2', uses: '2' },
-                        { label: '1 puff daily', puffs: '1', uses: '1' },
-                        { label: '2 puffs q4-6h PRN', puffs: '2', uses: '4' },
-                    ].map(preset => (
+                <div className="mt-4 flex flex-wrap gap-2">
+                    {inhalerPresets.map(preset => (
                         <button
                             key={preset.label}
                             onClick={() => {
                                 setPuffsPerUse(preset.puffs);
                                 setUsesPerDay(preset.uses);
+                                setPrnSelected(preset.prn);
                             }}
-                            className="min-w-max rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 transition active:scale-[0.99]"
+                            className={`rounded-xl border px-3 py-2 text-sm font-semibold transition active:scale-[0.99] ${puffsPerUse === preset.puffs && usesPerDay === preset.uses && prnSelected === preset.prn ? 'border-indigo-300 bg-indigo-600 text-white shadow-md shadow-indigo-500/20' : 'border-slate-200 bg-white text-slate-600'}`}
                         >
                             {preset.label}
                         </button>
                     ))}
                 </div>
+                {prnSelected && (
+                    <p className="mt-3 rounded-2xl bg-amber-50 px-3 py-2 text-sm leading-6 text-amber-800">
+                        For PRN directions, enter the expected maximum daily use.
+                    </p>
+                )}
             </SectionCard>
 
             <SectionCard className="border-sky-100 bg-sky-50">
@@ -414,9 +449,8 @@ const InjectableCalculator: React.FC<{ setResult: (res: number | null) => void }
         { id: 'slidingScale', label: 'Sliding scale / variable dose' },
     ];
     const steps = [
-        { label: 'Type', helper: 'What did the prescription say?' },
-        { label: 'Device', helper: 'Confirm the package details.' },
-        { label: 'Quantity', helper: 'What did we dispense?' },
+        { label: 'Type', helper: 'What type of injectable?' },
+        { label: 'Dispensed', helper: 'What did we dispense?' },
         { label: 'SIG', helper: 'Build the directions.' },
         { label: 'Result', helper: 'Here is the days supply.' },
     ];
@@ -460,8 +494,8 @@ const InjectableCalculator: React.FC<{ setResult: (res: number | null) => void }
         </section>
     );
 
-    const deviceStep = (
-        <section>
+    const dispensedStep = (
+        <section className="space-y-4">
             <label htmlFor="injectable-product" className="block text-sm font-semibold text-neutral-700">Medication / device</label>
             <select
                 id="injectable-product"
@@ -506,13 +540,8 @@ const InjectableCalculator: React.FC<{ setResult: (res: number | null) => void }
                     )}
                 </div>
             )}
-        </section>
-    );
-
-    const quantityStep = (
-        <section>
             <CalculatorInput label="Number of pens/vials dispensed" value={quantity} onChange={event => setQuantity(event.target.value)} placeholder="e.g., 5" />
-            <div className="mt-4 rounded-2xl bg-neutral-50 p-4 text-sm leading-6 text-neutral-600">
+            <div className="rounded-2xl bg-neutral-50 p-4 text-sm leading-6 text-neutral-600">
                 Enter the package count from the prescription fill. For insulin pens, this is usually the number of pens dispensed.
             </div>
         </section>
@@ -624,7 +653,7 @@ const InjectableCalculator: React.FC<{ setResult: (res: number | null) => void }
         </section>
     );
 
-    const stepContent = [typeStep, deviceStep, quantityStep, sigStep, resultStep][activeStep];
+    const stepContent = [typeStep, dispensedStep, sigStep, resultStep][activeStep];
 
     return (
         <div className="mx-auto flex min-h-[calc(100vh-9rem)] w-full max-w-md flex-col space-y-5 animate-fade-in">
@@ -705,15 +734,15 @@ const InjectableCalculator: React.FC<{ setResult: (res: number | null) => void }
 const calculatorContent: Record<CalculatorType, { title: string; description: string }> = {
   [CalculatorType.Oral]: {
     title: 'Oral Days Supply',
-    description: 'Calculate duration for tablets, capsules, and standard quantity directions.',
+    description: 'Calculate days supply for tablets, capsules, liquids, and standard directions.',
   },
   [CalculatorType.Inhaler]: {
     title: 'Inhaler Days Supply',
-    description: 'Calculate duration from puffs, daily use, and number of inhalers dispensed.',
+    description: 'Calculate days supply from puffs, daily use, and number of inhalers dispensed.',
   },
   [CalculatorType.Injectable]: {
-    title: 'Injectable Days Supply',
-    description: 'Calculate duration from total volume, dose volume, and dosing frequency.',
+    title: 'Injectable Calculator',
+    description: 'Calculate days supply for insulin pens, vials, and weekly injectables.',
   },
 };
 
@@ -748,7 +777,7 @@ const DaysSupplyCalculator: React.FC<DaysSupplyCalculatorProps> = ({ setView, in
     return (
         <button
             onClick={() => setType(label)}
-            className={`relative w-full py-3 px-4 text-sm font-semibold rounded-xl transition-all duration-300 ${isActive ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30' : 'bg-transparent text-neutral-600 hover:bg-neutral-100'}`}
+            className={`relative w-full py-3 px-4 text-sm font-semibold rounded-xl transition-all duration-300 ${isActive ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25' : 'bg-transparent text-neutral-600 hover:bg-neutral-100'}`}
         >
             {label}
         </button>
