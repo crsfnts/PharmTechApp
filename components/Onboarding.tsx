@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 
 interface OnboardingProps {
   onClose: () => void;
@@ -75,6 +75,43 @@ const PageDots: React.FC<{ total: number; current: number; onSelect: (index: num
       />
     ))}
   </div>
+);
+
+const WelcomeOnboardingScreen: React.FC<{
+  headline: string;
+  body: string;
+  showSkip: boolean;
+  onSkip: () => void;
+}> = ({ headline, body, showSkip, onSkip }) => (
+  <section className="relative flex min-h-full flex-col overflow-hidden bg-white px-0 pt-[max(0.5rem,env(safe-area-inset-top))]">
+    {showSkip && (
+      <button
+        onClick={onSkip}
+        className="absolute right-4 top-[max(0.35rem,env(safe-area-inset-top))] z-20 min-h-10 rounded-2xl px-3 text-sm font-semibold text-indigo-600 transition hover:bg-indigo-50"
+      >
+        Skip
+      </button>
+    )}
+
+    <div className="relative z-10 px-6 text-center">
+      <p className="text-[2.45rem] font-bold leading-none tracking-normal text-indigo-600">rxmate</p>
+      <h1 id="onboarding-title" className="mx-auto mt-9 max-w-[300px] text-[2rem] font-bold leading-[1.2] tracking-normal text-slate-950">
+        {headline}
+      </h1>
+      <p className="mx-auto mt-6 max-w-[312px] text-lg leading-8 text-slate-600">
+        {body}
+      </p>
+    </div>
+
+    <div className="relative mt-auto h-[50svh] min-h-[385px] w-full overflow-hidden">
+      <img
+        src="/onboarding-welcome-illustration.svg"
+        alt=""
+        className="absolute inset-x-0 bottom-0 mx-auto h-full w-full object-cover object-bottom"
+        draggable={false}
+      />
+    </div>
+  </section>
 );
 
 const Sparkle: React.FC<{ className: string }> = ({ className }) => (
@@ -189,60 +226,61 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
   primaryButtonLabel,
   onPrimary,
   onSkip,
-}) => (
-  <section className="flex min-h-full flex-col px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
-    <div className="mx-auto flex w-full max-w-md items-center justify-between">
-      <div className="h-11">
-        {title && <p className="text-3xl font-bold tracking-normal text-indigo-600">{title}</p>}
-      </div>
-      {showSkip && (
-        <button
-          onClick={onSkip}
-          className="min-h-11 rounded-2xl px-4 text-sm font-semibold text-indigo-600 transition hover:bg-indigo-50"
-        >
-          Skip
-        </button>
-      )}
-    </div>
+}) => {
+  if (visual === 'welcome') {
+    return <WelcomeOnboardingScreen headline={headline} body={body} showSkip={showSkip} onSkip={onSkip} />;
+  }
 
-    <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-3">
-      <OnboardingVisual type={visual} />
-
-      <div className="mt-4 text-center">
-        <h1 id="onboarding-title" className="mx-auto max-w-sm text-3xl font-bold leading-tight tracking-normal text-slate-950 sm:text-4xl">
-          {headline}
-        </h1>
-        <p className="mx-auto mt-4 max-w-sm text-base leading-7 text-slate-600">{body}</p>
-      </div>
-
-      {featureChips && (
-        <div className="mx-auto mt-7 grid w-full max-w-sm gap-3">
-          {featureChips.map(chip => (
-            <FeatureChip key={chip} label={chip} />
-          ))}
+  return (
+    <section className="flex min-h-full flex-col px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
+      <div className="mx-auto flex w-full max-w-md items-center justify-between">
+        <div className="h-11">
+          {title && <p className="text-3xl font-bold tracking-normal text-indigo-600">{title}</p>}
         </div>
-      )}
-    </div>
+        {showSkip && (
+          <button
+            onClick={onSkip}
+            className="min-h-11 rounded-2xl px-4 text-sm font-semibold text-indigo-600 transition hover:bg-indigo-50"
+          >
+            Skip
+          </button>
+        )}
+      </div>
 
-    <button
-      onClick={onPrimary}
-      className="mx-auto mt-4 flex min-h-14 w-full max-w-md items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-700 px-6 text-base font-bold text-white shadow-xl shadow-indigo-500/25 transition hover:from-indigo-700 hover:to-violet-800 active:scale-[0.99]"
-    >
-      {primaryButtonLabel}
-    </button>
-  </section>
-);
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-3">
+        <OnboardingVisual type={visual} />
+
+        <div className="mt-4 text-center">
+          <h1 id="onboarding-title" className="mx-auto max-w-sm text-3xl font-bold leading-tight tracking-normal text-slate-950 sm:text-4xl">
+            {headline}
+          </h1>
+          <p className="mx-auto mt-4 max-w-sm text-base leading-7 text-slate-600">{body}</p>
+        </div>
+
+        {featureChips && (
+          <div className="mx-auto mt-7 grid w-full max-w-sm gap-3">
+            {featureChips.map(chip => (
+              <FeatureChip key={chip} label={chip} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <button
+        onClick={onPrimary}
+        className="mx-auto mt-4 flex min-h-14 w-full max-w-md items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-700 px-6 text-base font-bold text-white shadow-xl shadow-indigo-500/25 transition hover:from-indigo-700 hover:to-violet-800 active:scale-[0.99]"
+      >
+        {primaryButtonLabel}
+      </button>
+    </section>
+  );
+};
 
 const OnboardingCarousel: React.FC<OnboardingProps> = ({ onClose }) => {
   const [currentScreen, setCurrentScreen] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const isFinalScreen = currentScreen === onboardingSteps.length - 1;
   const activeStep = onboardingSteps[currentScreen];
-
-  const carouselStyle = useMemo(
-    () => ({ transform: `translateX(-${currentScreen * 100}%)` }),
-    [currentScreen],
-  );
 
   const goToScreen = (screen: number) => {
     setCurrentScreen(Math.min(Math.max(screen, 0), onboardingSteps.length - 1));
@@ -276,25 +314,21 @@ const OnboardingCarousel: React.FC<OnboardingProps> = ({ onClose }) => {
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(124,58,237,0.14),transparent_32%),linear-gradient(180deg,#ffffff_0%,#faf8ff_72%,#ffffff_100%)]" />
       <div
-        className="relative flex h-full transition-transform duration-500 ease-out"
-        style={carouselStyle}
+        key={activeStep.headline}
+        className="relative h-full animate-fade-in"
         onTouchStart={event => setTouchStart(event.touches[0].clientX)}
         onTouchEnd={event => handleTouchEnd(event.changedTouches[0].clientX)}
       >
-        {onboardingSteps.map((step, index) => (
-          <div key={step.headline} className="w-full shrink-0">
-            <OnboardingScreen
-              {...step}
-              showSkip={index !== onboardingSteps.length - 1}
-              primaryButtonLabel={index === onboardingSteps.length - 1 ? 'Continue' : 'Next'}
-              onPrimary={handlePrimary}
-              onSkip={onClose}
-            />
-          </div>
-        ))}
+        <OnboardingScreen
+          {...activeStep}
+          showSkip={!isFinalScreen}
+          primaryButtonLabel={isFinalScreen ? 'Continue' : 'Next'}
+          onPrimary={handlePrimary}
+          onSkip={onClose}
+        />
       </div>
 
-      <div className="absolute inset-x-0 bottom-[calc(max(1.25rem,env(safe-area-inset-bottom))+4.75rem)]">
+      <div className={activeStep.visual === 'welcome' ? 'absolute inset-x-0 bottom-[calc(max(1.9rem,env(safe-area-inset-bottom)))] z-20' : 'absolute inset-x-0 bottom-[calc(max(1.25rem,env(safe-area-inset-bottom))+4.75rem)]'}>
         <PageDots total={onboardingSteps.length} current={currentScreen} onSelect={goToScreen} />
       </div>
 

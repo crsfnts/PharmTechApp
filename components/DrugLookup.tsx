@@ -4,7 +4,7 @@ import type { DrugInfo, TopDrug } from '../types.ts';
 import { findDrugLocally } from './drugData.ts';
 import Spinner from './Spinner.tsx';
 import { TOP_DRUGS_LIST } from '../constants.ts';
-import { AppPage, PageHeader, SectionCard, SectionLabel, inputClass, primaryButtonClass } from './AppLayout.tsx';
+import { AppPage, PageHeader, SectionCard, SectionLabel, primaryButtonClass } from './AppLayout.tsx';
 
 interface GlossaryProps {
   setView: (view: View) => void;

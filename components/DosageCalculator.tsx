@@ -698,7 +698,7 @@ const InjectableCalculator: React.FC<{ setResult: (res: number | null) => void }
                 </div>
 
                 <div
-                    className="min-h-[390px] touch-pan-y select-none"
+                    className="min-h-[340px] touch-pan-y select-none"
                     onTouchStart={handleTouchStart}
                     onTouchEnd={handleTouchEnd}
                 >
@@ -706,7 +706,7 @@ const InjectableCalculator: React.FC<{ setResult: (res: number | null) => void }
                 </div>
             </div>
 
-            <div className="sticky bottom-24 z-10 mt-auto rounded-3xl border border-neutral-200 bg-white/95 p-3 shadow-xl shadow-indigo-950/10 backdrop-blur">
+            <div className="fixed bottom-36 left-1/2 z-40 w-[calc(100%-2.5rem)] max-w-[390px] -translate-x-1/2 rounded-3xl border border-neutral-200 bg-white/95 p-3 shadow-xl shadow-indigo-950/10 backdrop-blur md:bottom-40">
                 <div className="flex items-center gap-3">
                     <button
                         onClick={goBack}
@@ -748,16 +748,12 @@ const calculatorContent: Record<CalculatorType, { title: string; description: st
 
 const DaysSupplyCalculator: React.FC<DaysSupplyCalculatorProps> = ({ setView, initialType = CalculatorType.Oral, allowTypeSwitch = true }) => {
   const [calculatorType, setCalculatorType] = useState<CalculatorType>(initialType);
-  const [result, setResult] = useState<number | null>(initialType === CalculatorType.Oral ? 90 : null);
+  const [, setResult] = useState<number | null>(null);
   const content = calculatorContent[calculatorType];
 
   const handleSetType = (type: CalculatorType) => {
       setCalculatorType(type);
       setResult(null); // Reset result when switching
-      if (type === CalculatorType.Oral) {
-        // Pre-calculate for default oral values
-        setResult(90);
-      }
   }
   
   const renderCalculator = () => {
