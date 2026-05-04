@@ -23,8 +23,8 @@ const SigGlossary: React.FC<SigGlossaryProps> = ({ setView }) => {
   }, [searchTerm]);
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-white p-8 rounded-xl shadow-lg">
+    <div className="mx-auto w-full px-5 py-5 pb-32">
+      <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-2xl font-bold text-slate-800 mb-1">Sig Glossary</h2>
         <p className="text-slate-500 mb-6">A quick reference for common prescription sigs.</p>
 

@@ -22,6 +22,38 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
+        min-height: 100vh;
+        overflow-x: hidden;
+        background:
+          radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.08), transparent 34rem),
+          #f6f7fb;
+      }
+
+      #root {
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      .app-shell {
+        isolation: isolate;
+      }
+
+      .app-shell .sm\:grid-cols-2,
+      .app-shell .sm\:grid-cols-3,
+      .app-shell .md\:grid-cols-2,
+      .app-shell .md\:grid-cols-3,
+      .app-shell .md\:grid-cols-5,
+      .app-shell .lg\:grid-cols-3 {
+        grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+      }
+
+      .app-shell .sm\:flex-row {
+        flex-direction: column !important;
+      }
+
+      .app-shell .sm\:p-8,
+      .app-shell .sm\:p-10 {
+        padding: 1.25rem !important;
       }
 
       /* Professional Animations */
@@ -307,7 +339,7 @@
       }
     </style>
 </head>
-  <body class="bg-neutral-50 text-neutral-900">
+  <body class="text-neutral-900">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
 </body>

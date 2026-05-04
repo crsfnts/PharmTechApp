@@ -32,8 +32,8 @@ const Header: React.FC<HeaderProps> = ({ currentView, onBack, showBack, onOpenOn
   const isDashboard = currentView === View.Dashboard;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-transparent bg-slate-50/95 backdrop-blur">
-      <div className="relative mx-auto flex h-16 max-w-md items-center justify-between px-5 md:max-w-2xl md:px-6">
+    <header className="sticky top-0 z-50 border-b border-transparent bg-white/95 backdrop-blur">
+      <div className="relative mx-auto flex h-16 w-full items-center justify-between px-5">
         <div className="flex min-w-0 items-center gap-3">
           {showBack && !isDashboard && (
             <button
@@ -55,12 +55,9 @@ const Header: React.FC<HeaderProps> = ({ currentView, onBack, showBack, onOpenOn
 
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <p className="text-3xl font-bold tracking-normal text-indigo-600">rxmate</p>
-              <span className="hidden rounded border border-slate-200 px-1.5 py-0.5 text-[11px] font-medium text-slate-500 md:inline-flex">
-                Professional
-              </span>
+              <p className="text-2xl font-bold tracking-normal text-indigo-600">rxmate</p>
             </div>
-            <p className="truncate text-sm text-slate-500">{viewTitles[currentView]}</p>
+            <p className="truncate text-xs font-medium text-slate-500">{viewTitles[currentView]}</p>
           </div>
         </div>
 

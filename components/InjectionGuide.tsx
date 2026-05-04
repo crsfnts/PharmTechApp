@@ -121,9 +121,9 @@ const InjectionGuide: React.FC<InjectionGuideProps> = ({ setView }) => {
   const totalCount = INJECTION_CHECKLIST.length;
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="mx-auto w-full px-5 py-5 pb-32">
       
-      <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+      <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-slate-800">Injection Guide</h2>
           <p className="text-slate-500">Reference for intramuscular injection sites, techniques, and procedures</p>

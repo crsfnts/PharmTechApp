@@ -17,6 +17,7 @@ import DiscountCardFinder from './components/DiscountCardFinder';
 import PriorAuthHelper from './components/PriorAuthHelper';
 import Onboarding from './components/Onboarding';
 import { ThemeProvider } from './context/ThemeContext';
+import { AppShell } from './components/AppLayout';
 
 const ONBOARDING_STORAGE_KEY = 'rxmate:onboarding-complete';
 
@@ -146,7 +147,7 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider view={currentView}>
-      <div className="min-h-screen bg-slate-50 flex flex-col pb-24">
+      <AppShell>
         <Header
           currentView={currentView}
           onBack={goBack}
@@ -155,7 +156,7 @@ const App: React.FC = () => {
         />
 
         {/* Main content with view transition */}
-        <main className="flex-1 w-full">
+        <main className="w-full flex-1 overflow-x-hidden">
           <div key={currentView} className="animate-fade-in">
             {renderView()}
           </div>
@@ -168,8 +169,8 @@ const App: React.FC = () => {
           </div>
         </footer>
 
-        <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200 bg-white/95 px-5 pb-[max(0.85rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-12px_30px_rgba(15,23,42,0.08)] backdrop-blur">
-          <div className="mx-auto grid max-w-md grid-cols-5 items-end">
+        <nav className="fixed bottom-0 left-1/2 z-50 w-full max-w-[430px] -translate-x-1/2 border-t border-slate-200 bg-white/95 px-5 pb-[max(0.85rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-12px_30px_rgba(15,23,42,0.08)] backdrop-blur md:bottom-6 md:rounded-b-[34px]">
+          <div className="mx-auto grid w-full grid-cols-5 items-end">
             <button onClick={() => setCurrentView(View.Dashboard)} className={navButtonClass(isActive([View.Dashboard]))}>
               <BottomNavIcon type="home" />
               Home
@@ -197,7 +198,7 @@ const App: React.FC = () => {
         </nav>
 
         {showOnboarding && <Onboarding onClose={closeOnboarding} />}
-      </div>
+      </AppShell>
     </ThemeProvider>
   );
 };

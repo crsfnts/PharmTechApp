@@ -143,8 +143,8 @@ const PriorAuthHelper: React.FC<PriorAuthHelperProps> = ({ setView }) => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="bg-white p-8 sm:p-10 rounded-2xl shadow-sm border border-neutral-200">
+    <div className="mx-auto w-full px-5 py-5 pb-32">
+      <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm">
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-neutral-900 mb-2">Prior Authorization Helper</h2>
           <p className="text-neutral-600">Guide for common prior authorization requirements and processes</p>

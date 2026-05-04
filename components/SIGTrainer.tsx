@@ -105,7 +105,7 @@ const SIGTrainer: React.FC<SIGTrainerProps> = ({ setView }) => {
   if (!currentTerm) return null;
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
+    <div className="mx-auto w-full px-5 py-5 pb-32">
       
       <div className="bg-white rounded-xl shadow-md p-6">
         <div className="flex justify-between items-center mb-6">
